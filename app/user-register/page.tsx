@@ -61,7 +61,7 @@ export default function RegisterPage() {
             </div>
             <h2 style={{ fontSize: "1.5rem", color: "var(--navy-deep)", marginBottom: 6 }}>Create Customer Account</h2>
             <p style={{ fontSize: "0.88rem", color: "var(--slate-500)" }}>
-              Self-signup is for regular users only. We send a verification email after you register.
+              Self-signup is for regular users only. After you register we email a verification link to the address you enter.
             </p>
           </div>
 

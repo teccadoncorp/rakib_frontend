@@ -14,7 +14,7 @@ The marketing site keeps the original layout, copy, and CSS. Staff, invites, and
 | **Retailer** | Invited by admin, superior, or a distributor | Use their partner ID on gated services. No self-signup |
 | **User** | Public signup | Most services. AEPS, all mobile recharge, and PAN need a retailer/distributor ID — or they can show interest while logged in |
 
-Emails (SMTP) cover user signup verification, staff/user invites, and forgot-password resets. If SMTP is empty, the API logs the message and returns the invite link in the staff UI.
+Emails go through **Resend** (SMTP or HTTP API): signup verification, forgot-password resets, staff invites, and application status changes. If mail is not configured, the API logs the message and returns the invite link in the staff UI.
 
 ## Run locally
 
@@ -54,11 +54,13 @@ MONGODB_URI=mongodb+srv://USER:PASS@cluster/digital-service
 JWT_SECRET=your-long-secret
 SUPERIOR_CREATE_SECRET=a-long-random-string
 FRONTEND_URL=http://127.0.0.1:43123
-SMTP_HOST=
-SMTP_PORT=587
-SMTP_USER=
-SMTP_PASS=
-SMTP_FROM="Digital Service <noreply@localhost>"
+SMTP_HOST=smtp.resend.com
+SMTP_PORT=465
+SMTP_USER=resend
+SMTP_PASS=re_xxxxxxxxx
+SMTP_FROM="Digital Service <noreply@your-verified-domain.com>"
+SMTP_SECURE=1
+RESEND_API_KEY=
 ```
 
 ## Default accounts (local seed)

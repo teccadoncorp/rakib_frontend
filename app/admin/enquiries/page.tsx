@@ -182,7 +182,7 @@ export default function AdminEnquiriesPage() {
       <div className="ap-kicker">CMS</div>
       <h1 className="ap-title">Customer enquiries</h1>
       <p className="ap-sub" style={{ marginBottom: 18 }}>
-        Review customer details, then upload the finished document — trade licence PDF, report, or certificate — so that customer can download it.
+        Review customer details, change status (the customer is emailed), then upload the finished document so they can download it.
       </p>
       {error ? <p style={{ color: "#f87171" }}>{error}</p> : null}
       {ok ? <p style={{ color: "#34d399" }}>{ok}</p> : null}
