@@ -1,10 +1,34 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { SERVICES } from "@/lib/data";
+import { JsonLd } from "@/components/JsonLd";
 import { MoreServicesCard, ServiceCard } from "@/components/ServiceCard";
+import { SERVICES } from "@/lib/data";
+import { canonical, pageMeta } from "@/lib/seo";
+
+export const metadata: Metadata = pageMeta({
+  title: "Digital Banking & Online Services | Digital Service - Your Digital Partner",
+  description:
+    "Fast, reliable digital banking, GST, PAN, income tax, MSME and PVC card printing from Digital Service, Jaynagar (Bakultala), South 24 Parganas.",
+  path: "/",
+  absolute: true,
+});
 
 export default function HomePage() {
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Digital Service offerings",
+          itemListElement: SERVICES.map((service, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: service.title,
+            url: canonical(`/services/${service.slug}`),
+          })),
+        }}
+      />
       <section className="hero">
         <div className="container hero-grid">
           <div className="hero-content">

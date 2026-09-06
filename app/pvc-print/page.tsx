@@ -1,14 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { JsonLd } from "@/components/JsonLd";
 import { PVC_CARDS, formatInr } from "@/lib/data";
+import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Order PVC Card Printing - Single & Multiple Plastic Cards",
-};
+export const metadata: Metadata = pageMeta({
+  title: "HD PVC Card Printing in Jaynagar",
+  description:
+    "Order waterproof Aadhaar, Voter, Ration, PAN, Ayushman, DL and e-Shram PVC cards from Digital Service, Jaynagar. From ₹70 per card with UPI payment.",
+  path: "/pvc-print",
+  keywords: "PVC card printing Jaynagar, Aadhaar PVC, Voter ID PVC, PAN PVC, Ayushman card print",
+  image: "/assets/images/pvc_card_showcase.jpg",
+});
 
 export default function PvcPrintPage() {
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "PVC Cards", path: "/pvc-print" },
+        ])}
+      />
       <section className="page-banner" style={{ background: "linear-gradient(135deg, #071938, #0d6efd)", color: "#fff", textAlign: "center", padding: "45px 0 35px" }}>
         <div className="container">
           <div
@@ -49,7 +62,7 @@ export default function PvcPrintPage() {
           <div>
             <img
               src="/assets/images/pvc_card_showcase.jpg"
-              alt="PVC Cards Showcase"
+              alt="HD waterproof PVC identity cards printed by Digital Service in Jaynagar"
               style={{ maxWidth: 380, width: "100%", height: "auto", borderRadius: 16, boxShadow: "0 10px 30px rgba(0,0,0,0.1)", border: "1px solid #e2e8f0" }}
             />
           </div>
@@ -111,7 +124,7 @@ export default function PvcPrintPage() {
                     </div>
                   </div>
                   <Link
-                    href={`/pvc-details?card=${card.slug}`}
+                    href={`/pvc-print/${card.slug}`}
                     className="btn btn-primary"
                     style={{ width: "100%", padding: 12, fontSize: "0.95rem", fontWeight: 700, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
                   >

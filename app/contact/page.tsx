@@ -1,41 +1,39 @@
-"use client";
-
-import { FormEvent, useState } from "react";
+import type { Metadata } from "next";
+import { ContactForm } from "@/components/ContactForm";
+import { JsonLd } from "@/components/JsonLd";
+import { PageBanner } from "@/components/PageBanner";
+import { breadcrumbJsonLd, canonical, pageMeta } from "@/lib/seo";
 import { SITE, waHref } from "@/lib/site";
-import { api } from "@/lib/api";
+
+export const metadata: Metadata = pageMeta({
+  title: "Contact Digital Service in Jaynagar",
+  description:
+    "Visit Digital Service at Jibon Mondal Hat, Jaynagar (Bakultala), or call +91 7872292614 / WhatsApp for AEPS, GST, PAN, tax, and PVC card help.",
+  path: "/contact",
+  keywords: "Digital Service contact, Jaynagar digital centre, Bakultala GST help, 7872292614",
+});
 
 export default function ContactPage() {
-  const [status, setStatus] = useState<"idle" | "ok" | "err">("idle");
-  const [message, setMessage] = useState("");
-
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    try {
-      await api.contact({
-        name: String(form.get("name") || ""),
-        phone: String(form.get("phone") || ""),
-        email: String(form.get("email") || ""),
-        subject: String(form.get("subject") || ""),
-        message: String(form.get("message") || ""),
-      });
-      setStatus("ok");
-      setMessage("Thank you. Your message has been received. Our team will contact you shortly.");
-      e.currentTarget.reset();
-    } catch (err) {
-      setStatus("err");
-      setMessage(err instanceof Error ? err.message : "Unable to send message right now.");
-    }
-  }
-
   return (
     <>
-      <section className="page-banner">
-        <div className="container">
-          <h1>Contact Us</h1>
-          <p>Have questions or need assistance? Reach out to our local team today.</p>
-        </div>
-      </section>
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Contact", path: "/contact" },
+          ]),
+          {
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            name: "Contact Digital Service",
+            url: canonical("/contact"),
+          },
+        ]}
+      />
+      <PageBanner
+        title="Contact Us"
+        subtitle="Have questions or need assistance? Reach out to our local team today."
+      />
 
       <section className="section" style={{ background: "#ffffff" }}>
         <div className="container">
@@ -49,6 +47,7 @@ export default function ContactPage() {
                 <InfoRow icon="fa-location-dot" title="Business Address" text={SITE.address} />
                 <InfoRow icon="fa-phone" title="Phone Number" text={<a href={`tel:${SITE.phone}`}>{SITE.phoneIntl}</a>} />
                 <InfoRow icon="fa-envelope" title="Email Address" text={<a href={`mailto:${SITE.email}`}>{SITE.email}</a>} />
+                <InfoRow icon="fa-clock" title="Working Hours" text={SITE.hours} />
               </div>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 <a href={`tel:${SITE.phone}`} className="btn btn-primary">
@@ -60,57 +59,12 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div
-              style={{
-                background: "#ffffff",
-                border: "1px solid var(--border-light)",
-                borderRadius: 20,
-                padding: 36,
-                boxShadow: "var(--card-shadow)",
-              }}
-            >
-              <h3 style={{ fontSize: "1.3rem", marginBottom: 20, color: "var(--navy-deep)" }}>Send Us a Message</h3>
-              {status !== "idle" ? (
-                <div className={status === "ok" ? "alert alert-success" : "alert alert-danger"}>{message}</div>
-              ) : null}
-              <form onSubmit={onSubmit}>
-                <div className="form-group">
-                  <label className="form-label" htmlFor="contact_name">
-                    Your Name <span style={{ color: "red" }}>*</span>
-                  </label>
-                  <input type="text" id="contact_name" name="name" className="form-control" required placeholder="Enter full name" />
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="contact_phone">
-                      Phone Number <span style={{ color: "red" }}>*</span>
-                    </label>
-                    <input type="tel" id="contact_phone" name="phone" className="form-control" required placeholder="10-digit mobile number" />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="contact_email">Email (Optional)</label>
-                    <input type="email" id="contact_email" name="email" className="form-control" placeholder="name@example.com" />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label className="form-label" htmlFor="contact_subject">Subject</label>
-                  <input type="text" id="contact_subject" name="subject" className="form-control" placeholder="e.g. Query regarding GST 1" />
-                </div>
-                <div className="form-group">
-                  <label className="form-label" htmlFor="contact_message">
-                    Your Message <span style={{ color: "red" }}>*</span>
-                  </label>
-                  <textarea id="contact_message" name="message" className="form-control" rows={4} required placeholder="Write your message here..."></textarea>
-                </div>
-                <button type="submit" className="btn btn-primary" style={{ width: "100%", padding: 12, fontSize: "0.98rem", marginTop: 10 }}>
-                  Send Message <i className="fa-solid fa-paper-plane"></i>
-                </button>
-              </form>
-            </div>
+            <ContactForm />
           </div>
 
           <div style={{ marginTop: 50, borderRadius: 20, overflow: "hidden", border: "1px solid var(--border-light)", boxShadow: "var(--card-shadow)" }}>
             <iframe
+              title="Digital Service Jaynagar map"
               src={SITE.mapEmbed}
               width="100%"
               height="380"

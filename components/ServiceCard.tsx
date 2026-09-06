@@ -48,7 +48,7 @@ export function ServiceCard({
           Apply Now <i className="fa-solid fa-arrow-right"></i>
         </Link>
         <Link
-          href={`/service-details?slug=${service.slug}`}
+          href={`/services/${service.slug}`}
           className="btn btn-outline btn-sm"
           style={{
             width: "100%",

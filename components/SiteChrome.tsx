@@ -3,9 +3,14 @@
 import { usePathname } from "next/navigation";
 import { AuthProvider } from "@/lib/auth";
 import { SiteHeader } from "./SiteHeader";
-import { SiteFooter } from "./SiteFooter";
 
-export function SiteChrome({ children }: { children: React.ReactNode }) {
+export function SiteChrome({
+  children,
+  footer,
+}: {
+  children: React.ReactNode;
+  footer: React.ReactNode;
+}) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
 
@@ -17,7 +22,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
         <>
           <SiteHeader />
           {children}
-          <SiteFooter />
+          {footer}
         </>
       )}
     </AuthProvider>

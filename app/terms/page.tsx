@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Terms & Conditions" };
+export const metadata: Metadata = pageMeta({
+  title: "Terms & Conditions",
+  description:
+    "Terms for using the Digital Service portal, document uploads, processing times, and government filing authorisation.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

@@ -1,13 +1,24 @@
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/JsonLd";
 import { BankSvg, WhyChooseUs } from "../page";
+import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About Us",
-};
+export const metadata: Metadata = pageMeta({
+  title: "About Digital Service, Jaynagar",
+  description:
+    "Digital Service is a local centre in Jaynagar (Bakultala) for AEPS, recharge, PAN, GST, income tax, MSME and trade licence — fast, confidential, and affordable.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "About", path: "/about" },
+        ])}
+      />
       <section className="page-banner">
         <div className="container">
           <h1>About Digital Service</h1>

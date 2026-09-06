@@ -16,6 +16,10 @@ Open http://127.0.0.1:43123
 
 Set `NEXT_PUBLIC_API_URL` to your backend URL.
 
+Set `NEXT_PUBLIC_SITE_URL` to the live domain (used for canonical tags, Open Graph, and `/sitemap.xml`).
+
+Public pages are server-rendered with unique titles, descriptions, JSON-LD, and pretty URLs such as `/services/gst-registration` and `/pvc-print/aadhaar-pvc`.
+
 ## Demo logins
 
 Staff portal `/admin/login`

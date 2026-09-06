@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = { title: "Privacy Policy" };
+export const metadata: Metadata = pageMeta({
+  title: "Privacy Policy",
+  description:
+    "How Digital Service in Jaynagar collects, uses, and protects personal information and uploaded identity documents.",
+  path: "/privacy-policy",
+});
 
 export default function PrivacyPage() {
   return (

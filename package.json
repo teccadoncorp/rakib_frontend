@@ -1,9 +1,10 @@
 {
-  "name": "rakib-frontend",
+  "name": "digital-service",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack -H 0.0.0.0 -p 43123",
+    "dev:api": "npm --prefix server run dev",
     "build": "next build --turbopack",
     "start": "next start -H 0.0.0.0 -p 43123",
     "lint": "eslint"

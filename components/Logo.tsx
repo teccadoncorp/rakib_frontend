@@ -5,7 +5,7 @@ export function Logo({ height = 52 }: { height?: number }) {
     <Link href="/" className="logo">
       <img
         src="/assets/images/logo.png"
-        alt="Digital Service Logo"
+        alt="Digital Service — Jaynagar digital partner"
         style={{
           height,
           width: "auto",

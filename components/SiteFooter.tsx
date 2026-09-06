@@ -1,14 +1,8 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { MobileBottomNav } from "./MobileBottomNav";
 import { SITE, waHref } from "@/lib/site";
 
 export function SiteFooter() {
-  const pathname = usePathname();
-  const bottomActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
-
   return (
     <>
       <section className="pre-footer-bar">
@@ -19,7 +13,7 @@ export function SiteFooter() {
                 <i className="fa-solid fa-location-dot"></i>
               </div>
               <div>
-                <h5>Address</h5>
+                <h2>Address</h2>
                 <p>{SITE.address}</p>
               </div>
             </div>
@@ -28,7 +22,7 @@ export function SiteFooter() {
                 <i className="fa-solid fa-phone"></i>
               </div>
               <div>
-                <h5>Phone</h5>
+                <h2>Phone</h2>
                 <p>
                   <a href={`tel:${SITE.phone}`}>{SITE.phone}</a>
                 </p>
@@ -39,7 +33,7 @@ export function SiteFooter() {
                 <i className="fa-solid fa-envelope"></i>
               </div>
               <div>
-                <h5>Email</h5>
+                <h2>Email</h2>
                 <p>
                   <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
                 </p>
@@ -50,7 +44,7 @@ export function SiteFooter() {
                 <i className="fa-solid fa-clock"></i>
               </div>
               <div>
-                <h5>Working Hours</h5>
+                <h2>Working Hours</h2>
                 <p>{SITE.hours}</p>
               </div>
             </div>
@@ -65,7 +59,9 @@ export function SiteFooter() {
               <Link href="/" className="logo" style={{ color: "#fff", display: "inline-block" }}>
                 <img
                   src="/assets/images/logo.png"
-                  alt="Digital Service Logo"
+                  alt="Digital Service logo — Jaynagar digital banking and GST centre"
+                  width={160}
+                  height={56}
                   style={{
                     height: 56,
                     width: "auto",
@@ -84,8 +80,8 @@ export function SiteFooter() {
               </p>
             </div>
 
-            <div className="footer-col">
-              <h4>Quick Links</h4>
+            <nav className="footer-col" aria-label="Quick links">
+              <h2>Quick Links</h2>
               <ul className="footer-link-list">
                 <li><Link href="/">Home</Link></li>
                 <li>
@@ -98,30 +94,30 @@ export function SiteFooter() {
                 <li><Link href="/about">About Us</Link></li>
                 <li><Link href="/contact">Contact Us</Link></li>
               </ul>
-            </div>
+            </nav>
 
-            <div className="footer-col">
-              <h4>Our Services</h4>
+            <nav className="footer-col" aria-label="Services">
+              <h2>Our Services</h2>
               <ul className="footer-link-list">
                 <li><Link href="/pvc-print">PVC Card Printing</Link></li>
-                <li><Link href="/service-details?slug=aeps">AEPS</Link></li>
-                <li><Link href="/service-details?slug=gst-registration">GST Services</Link></li>
-                <li><Link href="/service-details?slug=income-tax-filing">Income Tax</Link></li>
+                <li><Link href="/services/aeps">AEPS</Link></li>
+                <li><Link href="/services/gst-registration">GST Services</Link></li>
+                <li><Link href="/services/income-tax-filing">Income Tax</Link></li>
                 <li><Link href="/services">More Services</Link></li>
               </ul>
-            </div>
+            </nav>
 
-            <div className="footer-col">
-              <h4>Important Links</h4>
+            <nav className="footer-col" aria-label="Policies">
+              <h2>Important Links</h2>
               <ul className="footer-link-list">
                 <li><Link href="/privacy-policy">Privacy Policy</Link></li>
                 <li><Link href="/terms">Terms & Conditions</Link></li>
                 <li><Link href="/privacy-policy">Refund Policy</Link></li>
               </ul>
-            </div>
+            </nav>
 
             <div className="footer-col">
-              <h4>Need Help?</h4>
+              <h2>Need Help?</h2>
               <p style={{ fontSize: "0.82rem", marginBottom: 6 }}>
                 <i className="fa-solid fa-phone" style={{ color: "var(--primary-blue)", marginRight: 6 }}></i>{" "}
                 {SITE.phone}
@@ -156,30 +152,7 @@ export function SiteFooter() {
         <i className="fa-brands fa-whatsapp"></i>
       </a>
 
-      <nav className="mobile-bottom-nav">
-        <Link href="/" className={`bottom-nav-item${bottomActive("/") ? " active" : ""}`}>
-          <i className="fa-solid fa-house"></i>
-          <span>Home</span>
-        </Link>
-        <Link href="/pvc-print" className={`bottom-nav-item${bottomActive("/pvc-print") ? " active" : ""}`}>
-          <i className="fa-solid fa-id-card"></i>
-          <span>Order PVC</span>
-        </Link>
-        <Link href="/apply" className={`bottom-nav-item bottom-nav-center${bottomActive("/apply") ? " active" : ""}`}>
-          <div className="center-btn-circle">
-            <i className="fa-solid fa-paper-plane"></i>
-          </div>
-          <span>Apply</span>
-        </Link>
-        <Link href="/track" className={`bottom-nav-item${bottomActive("/track") ? " active" : ""}`}>
-          <i className="fa-solid fa-magnifying-glass"></i>
-          <span>Track</span>
-        </Link>
-        <Link href="/contact" className={`bottom-nav-item${bottomActive("/contact") ? " active" : ""}`}>
-          <i className="fa-solid fa-headset"></i>
-          <span>Contact</span>
-        </Link>
-      </nav>
+      <MobileBottomNav />
     </>
   );
 }

@@ -1,15 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SERVICES } from "@/lib/data";
+import { JsonLd } from "@/components/JsonLd";
 import { MoreServicesCard, ServiceCard } from "@/components/ServiceCard";
+import { SERVICES } from "@/lib/data";
+import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Our Digital Services",
-};
+export const metadata: Metadata = pageMeta({
+  title: "Digital Services in Jaynagar",
+  description:
+    "AEPS, mobile recharge, PAN, GST registration and returns, income tax, MSME, trade licence, and PVC card printing from Digital Service, Jaynagar.",
+  path: "/services",
+});
 
 export default function ServicesPage() {
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+        ])}
+      />
       <section className="page-banner">
         <div className="container">
           <h1>Our Digital Services</h1>

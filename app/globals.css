@@ -970,11 +970,13 @@ img {
   font-size: 1rem;
 }
 
+.pre-footer-box h2,
 .pre-footer-box h5 {
   font-size: 0.75rem;
   color: var(--slate-500);
   text-transform: uppercase;
   margin-bottom: 2px;
+  font-weight: 700;
 }
 
 .pre-footer-box p {
@@ -1005,10 +1007,12 @@ img {
   line-height: 1.6;
 }
 
+.footer-col h2,
 .footer-col h4 {
   color: #ffffff;
   font-size: 0.95rem;
   margin-bottom: 16px;
+  font-weight: 700;
 }
 
 .footer-link-list {
@@ -1422,6 +1426,18 @@ textarea.form-control {
 
 button {
   font-family: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .pvc-catalog-card:hover {

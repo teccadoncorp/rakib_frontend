@@ -32,6 +32,7 @@ const phpAliases: Record<string, string> = {
 };
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   async rewrites() {
     return Object.entries(phpAliases).map(([source, destination]) => ({
       source,
