@@ -39,3 +39,12 @@ Customer portal `/user-login`
 | Distributor / Retailer | same emails as above | same passwords |
 
 Distributors and retailers use the user dashboard. The staff panel is extra.
+
+## Cloudflare
+
+Worker name: `rakib-frontend`.
+
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy`
+
+Set `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_SITE_URL` in the Cloudflare project variables.
