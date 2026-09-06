@@ -7,6 +7,8 @@ export const metadata: Metadata = {
     default: "Staff Control Room",
     template: "%s | Digital Service Staff",
   },
+  appleWebApp: { capable: false },
+  robots: { index: false, follow: false },
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

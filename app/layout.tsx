@@ -27,6 +27,7 @@ export const metadata: Metadata = {
   category: "business",
   referrer: "origin-when-cross-origin",
   formatDetection: { telephone: false, email: false, address: false },
+  appleWebApp: { capable: false },
   icons: {
     icon: "/assets/images/logo.png",
     apple: "/assets/images/logo.png",
