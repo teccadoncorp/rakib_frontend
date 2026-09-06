@@ -32,6 +32,7 @@ const phpAliases: Record<string, string> = {
 };
 
 const nextConfig: NextConfig = {
+  // deploy trigger 2026-09-06
   poweredByHeader: false,
   allowedDevOrigins: ["127.0.0.1", "localhost"],
   async rewrites() {
