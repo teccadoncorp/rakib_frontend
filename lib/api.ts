@@ -14,6 +14,7 @@ export type User = {
   status?: "active" | "invited" | "suspended";
   emailVerified?: boolean;
   invitedBy?: string;
+  createdAt?: string | null;
 };
 
 export type Application = {
@@ -27,6 +28,13 @@ export type Application = {
   createdAt: string;
   customerName: string;
   mobile: string;
+  email?: string;
+  address?: string;
+  message?: string;
+  utr?: string;
+  files?: string[];
+  userId?: string;
+  partnerId?: string;
   partnerCode?: string;
   partnerRole?: string;
 };
@@ -179,7 +187,14 @@ export const api = {
   staffOverview: (token: string) =>
     request<{ overview: StaffOverview }>("/api/staff/overview", { token }),
   staffUsers: (token: string, role?: string) =>
-    request<{ users: User[] }>(`/api/staff/users${role ? `?role=${encodeURIComponent(role)}` : ""}`, { token }),
+    request<{ users: User[]; total?: number }>(`/api/staff/users${role ? `?role=${encodeURIComponent(role)}` : ""}`, { token }),
+  createStaffUser: (token: string, payload: Record<string, string>, secret?: string) =>
+    request<{ user: User }>("/api/staff/users", {
+      method: "POST",
+      token,
+      headers: secret ? { "X-Superior-Secret": secret } : undefined,
+      body: JSON.stringify(payload),
+    }),
   staffInvite: (token: string, payload: Record<string, string>) =>
     request<{ user: User; inviteUrl?: string }>("/api/staff/invite", {
       method: "POST",
@@ -199,13 +214,18 @@ export const api = {
       token,
       body: JSON.stringify(payload),
     }),
-  staffApplications: (token: string) =>
-    request<{ applications: Application[] }>("/api/staff/applications", { token }),
-  patchApplication: (token: string, id: string, status: string) =>
+  staffApplications: (token: string, query?: { type?: string; status?: string }) => {
+    const params = new URLSearchParams();
+    if (query?.type) params.set("type", query.type);
+    if (query?.status) params.set("status", query.status);
+    const suffix = params.toString() ? `?${params.toString()}` : "";
+    return request<{ applications: Application[]; total?: number }>(`/api/staff/applications${suffix}`, { token });
+  },
+  patchApplication: (token: string, id: string, payload: string | Record<string, string | number | null>) =>
     request<{ application: Application }>(`/api/staff/applications/${id}`, {
       method: "PATCH",
       token,
-      body: JSON.stringify({ status }),
+      body: JSON.stringify(typeof payload === "string" ? { status: payload } : payload),
     }),
   staffInterests: (token: string) =>
     request<{ interests: Interest[] }>("/api/staff/interests", { token }),
