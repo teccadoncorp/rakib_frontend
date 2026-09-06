@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { ContactForm } from "@/components/ContactForm";
 import { JsonLd } from "@/components/JsonLd";
 import { PageBanner } from "@/components/PageBanner";
+import { loadPublicSettings } from "@/lib/catalog";
 import { breadcrumbJsonLd, canonical, pageMeta } from "@/lib/seo";
-import { SITE, waHref } from "@/lib/site";
+import { telHref, waHref } from "@/lib/site";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMeta({
   title: "Contact Digital Service in Jaynagar",
@@ -13,7 +16,8 @@ export const metadata: Metadata = pageMeta({
   keywords: "Digital Service contact, Jaynagar digital centre, Bakultala GST help, 7872292614",
 });
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await loadPublicSettings();
   return (
     <>
       <JsonLd
@@ -44,16 +48,16 @@ export default function ContactPage() {
                 Visit our service centre or contact us directly via phone, WhatsApp, or email for quick support.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 20, marginBottom: 30 }}>
-                <InfoRow icon="fa-location-dot" title="Business Address" text={SITE.address} />
-                <InfoRow icon="fa-phone" title="Phone Number" text={<a href={`tel:${SITE.phone}`}>{SITE.phoneIntl}</a>} />
-                <InfoRow icon="fa-envelope" title="Email Address" text={<a href={`mailto:${SITE.email}`}>{SITE.email}</a>} />
-                <InfoRow icon="fa-clock" title="Working Hours" text={SITE.hours} />
+                <InfoRow icon="fa-location-dot" title="Business Address" text={settings.address} />
+                <InfoRow icon="fa-phone" title="Phone Number" text={<a href={telHref(settings)}>{settings.phoneIntl}</a>} />
+                <InfoRow icon="fa-envelope" title="Email Address" text={<a href={`mailto:${settings.email}`}>{settings.email}</a>} />
+                <InfoRow icon="fa-clock" title="Working Hours" text={settings.hours} />
               </div>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <a href={`tel:${SITE.phone}`} className="btn btn-primary">
+                <a href={telHref(settings)} className="btn btn-primary">
                   <i className="fa-solid fa-phone"></i> Call Now
                 </a>
-                <a href={waHref()} target="_blank" rel="noreferrer" className="btn" style={{ background: "#25d366", color: "#fff" }}>
+                <a href={waHref(undefined, settings)} target="_blank" rel="noreferrer" className="btn" style={{ background: "#25d366", color: "#fff" }}>
                   <i className="fa-brands fa-whatsapp"></i> WhatsApp
                 </a>
               </div>
@@ -65,7 +69,7 @@ export default function ContactPage() {
           <div style={{ marginTop: 50, borderRadius: 20, overflow: "hidden", border: "1px solid var(--border-light)", boxShadow: "var(--card-shadow)" }}>
             <iframe
               title="Digital Service Jaynagar map"
-              src={SITE.mapEmbed}
+              src={settings.mapEmbed}
               width="100%"
               height="380"
               style={{ border: 0 }}

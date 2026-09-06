@@ -4,8 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "./Logo";
+import { useSettings } from "@/lib/cms";
 import { useAuth } from "@/lib/auth";
 import { canUseUserPortal, isStaffRole } from "@/lib/roles";
+import { mailHref, telHref } from "@/lib/site";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -19,6 +21,7 @@ const NAV = [
 export function SiteHeader() {
   const pathname = usePathname();
   const { user } = useAuth();
+  const settings = useSettings();
   const [open, setOpen] = useState(false);
 
   const isActive = (href: string) => {
@@ -35,11 +38,11 @@ export function SiteHeader() {
           <div className="top-info-right">
             <div className="top-info-item">
               <i className="fa-solid fa-phone"></i>
-              <a href="tel:7872292614">7872292614</a>
+              <a href={telHref(settings)}>{settings.phone}</a>
             </div>
             <div className="top-info-item">
               <i className="fa-solid fa-envelope"></i>
-              <a href="mailto:rhossen389@gmail.com">rhossen389@gmail.com</a>
+              <a href={mailHref(settings)}>{settings.email}</a>
             </div>
           </div>
         </div>

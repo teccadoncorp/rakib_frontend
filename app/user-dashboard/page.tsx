@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { api, type Application, type Interest } from "@/lib/api";
+import { useCatalog } from "@/lib/cms";
+import { formatInr } from "@/lib/data";
 import { canUseUserPortal, isPartnerRole, roleLabel } from "@/lib/roles";
 
 export default function DashboardPage() {
@@ -12,6 +14,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [apps, setApps] = useState<Application[]>([]);
   const [interests, setInterests] = useState<Interest[]>([]);
+  const services = useCatalog();
 
   useEffect(() => {
     if (!ready) return;
@@ -153,6 +156,45 @@ export default function DashboardPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            )}
+          </div>
+
+          <div style={{ background: "#ffffff", borderRadius: 20, border: "1px solid var(--border-light)", padding: 28, boxShadow: "0 10px 30px rgba(0,0,0,0.03)", marginTop: 22 }}>
+            <h3 style={{ fontSize: "1.2rem", color: "var(--navy-deep)", margin: "0 0 8px", display: "flex", alignItems: "center", gap: 8 }}>
+              <i className="fa-solid fa-briefcase" style={{ color: "var(--primary-blue)" }}></i> Apply for a service
+            </h3>
+            <p style={{ fontSize: "0.88rem", color: "var(--slate-500)", margin: "0 0 16px" }}>
+              Catalog is managed from the staff CMS. Documents and prices on each apply form match what admin publishes.
+            </p>
+            {services.length === 0 ? (
+              <p style={{ fontSize: "0.9rem", color: "var(--slate-500)", margin: 0 }}>No services are published yet.</p>
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+                {services.map((service) => (
+                  <Link
+                    key={service.slug}
+                    href={`/apply?service=${service.slug}`}
+                    style={{
+                      display: "block",
+                      padding: 16,
+                      borderRadius: 14,
+                      border: "1px solid var(--border-light)",
+                      background: "#f8fafc",
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                  >
+                    <strong style={{ display: "block", color: "var(--navy-deep)" }}>{service.title}</strong>
+                    <span style={{ fontSize: "0.82rem", color: "var(--primary-blue)", fontWeight: 700 }}>
+                      {service.price ? formatInr(service.price) : service.priceDisplay || "As applicable"}
+                    </span>
+                    <div style={{ fontSize: "0.78rem", color: "var(--slate-500)", marginTop: 6 }}>
+                      {service.documents.length} document{service.documents.length === 1 ? "" : "s"}
+                      {service.requiresPartner ? " · partner ID" : ""}
+                    </div>
+                  </Link>
+                ))}
               </div>
             )}
           </div>

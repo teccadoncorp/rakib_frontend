@@ -1,8 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { MobileBottomNav } from "./MobileBottomNav";
-import { SITE, waHref } from "@/lib/site";
+import { useCatalog, useSettings } from "@/lib/cms";
+import { mailHref, telHref, waHref } from "@/lib/site";
 
 export function SiteFooter() {
+  const settings = useSettings();
+  const services = useCatalog();
+  const featured = services.slice(0, 4);
+
   return (
     <>
       <section className="pre-footer-bar">
@@ -14,7 +21,7 @@ export function SiteFooter() {
               </div>
               <div>
                 <h2>Address</h2>
-                <p>{SITE.address}</p>
+                <p>{settings.address}</p>
               </div>
             </div>
             <div className="pre-footer-box">
@@ -24,7 +31,7 @@ export function SiteFooter() {
               <div>
                 <h2>Phone</h2>
                 <p>
-                  <a href={`tel:${SITE.phone}`}>{SITE.phone}</a>
+                  <a href={telHref(settings)}>{settings.phone}</a>
                 </p>
               </div>
             </div>
@@ -35,7 +42,7 @@ export function SiteFooter() {
               <div>
                 <h2>Email</h2>
                 <p>
-                  <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+                  <a href={mailHref(settings)}>{settings.email}</a>
                 </p>
               </div>
             </div>
@@ -45,7 +52,7 @@ export function SiteFooter() {
               </div>
               <div>
                 <h2>Working Hours</h2>
-                <p>{SITE.hours}</p>
+                <p>{settings.hours}</p>
               </div>
             </div>
           </div>
@@ -59,7 +66,7 @@ export function SiteFooter() {
               <Link href="/" className="logo" style={{ color: "#fff", display: "inline-block" }}>
                 <img
                   src="/assets/images/logo.png"
-                  alt="Digital Service logo — Jaynagar digital banking and GST centre"
+                  alt={`${settings.name} logo — Jaynagar digital banking and GST centre`}
                   width={160}
                   height={56}
                   style={{
@@ -76,7 +83,8 @@ export function SiteFooter() {
                 />
               </Link>
               <p style={{ marginTop: 16 }}>
-                Your trusted partner for digital banking, taxation and business compliance services. We are committed to provide fast, secure and reliable services.
+                {settings.about ||
+                  "Your trusted partner for digital banking, taxation and business compliance services. We are committed to provide fast, secure and reliable services."}
               </p>
             </div>
 
@@ -100,9 +108,11 @@ export function SiteFooter() {
               <h2>Our Services</h2>
               <ul className="footer-link-list">
                 <li><Link href="/pvc-print">PVC Card Printing</Link></li>
-                <li><Link href="/services/aeps">AEPS</Link></li>
-                <li><Link href="/services/gst-registration">GST Services</Link></li>
-                <li><Link href="/services/income-tax-filing">Income Tax</Link></li>
+                {featured.map((service) => (
+                  <li key={service.slug}>
+                    <Link href={`/services/${service.slug}`}>{service.shortTitle || service.title}</Link>
+                  </li>
+                ))}
                 <li><Link href="/services">More Services</Link></li>
               </ul>
             </nav>
@@ -120,20 +130,20 @@ export function SiteFooter() {
               <h2>Need Help?</h2>
               <p style={{ fontSize: "0.82rem", marginBottom: 6 }}>
                 <i className="fa-solid fa-phone" style={{ color: "var(--primary-blue)", marginRight: 6 }}></i>{" "}
-                {SITE.phone}
+                {settings.phone}
               </p>
               <p style={{ fontSize: "0.82rem", marginBottom: 12 }}>
                 <i className="fa-solid fa-envelope" style={{ color: "var(--primary-blue)", marginRight: 6 }}></i>{" "}
-                {SITE.email}
+                {settings.email}
               </p>
-              <a href={waHref()} target="_blank" rel="noreferrer" className="whatsapp-pill-button">
+              <a href={waHref(undefined, settings)} target="_blank" rel="noreferrer" className="whatsapp-pill-button">
                 <i className="fa-brands fa-whatsapp" style={{ fontSize: "1rem" }}></i> Chat on WhatsApp
               </a>
             </div>
           </div>
 
           <div className="footer-bottom-bar">
-            <p>{SITE.copyright}</p>
+            <p>{settings.copyright}</p>
             <p>
               Designed with <i className="fa-solid fa-heart" style={{ color: "#ef4444" }}></i> for better service
             </p>
@@ -142,7 +152,7 @@ export function SiteFooter() {
       </footer>
 
       <a
-        href={waHref()}
+        href={waHref(undefined, settings)}
         className="whatsapp-float-btn"
         target="_blank"
         rel="noreferrer"

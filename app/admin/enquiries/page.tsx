@@ -18,6 +18,7 @@ type Draft = {
   email: string;
   address: string;
   message: string;
+  notes: string;
   amount: string;
   partnerCode: string;
   partnerRole: string;
@@ -35,6 +36,7 @@ function draftFromApp(a: Application): Draft {
     email: a.email || "",
     address: a.address || "",
     message: a.message || "",
+    notes: a.notes || "",
     amount: a.amount == null ? "" : String(a.amount),
     partnerCode: a.partnerCode || "",
     partnerRole: a.partnerRole || "",
@@ -83,6 +85,7 @@ export default function AdminEnquiriesPage() {
         a.partnerCode,
         a.utr,
         a.message,
+        a.notes,
       ].some((v) => String(v || "").toLowerCase().includes(query));
     });
   }, [apps, q, type, status]);
@@ -111,6 +114,7 @@ export default function AdminEnquiriesPage() {
         email: draft.email,
         address: draft.address,
         message: draft.message,
+        notes: draft.notes,
         amount: draft.amount,
         partnerCode: draft.partnerCode,
         partnerRole: draft.partnerRole,
@@ -129,10 +133,10 @@ export default function AdminEnquiriesPage() {
 
   return (
     <AdminShell>
-      <div className="ap-kicker">Pipeline</div>
-      <h1 className="ap-title">Applications</h1>
+      <div className="ap-kicker">CMS</div>
+      <h1 className="ap-title">Customer enquiries</h1>
       <p className="ap-sub" style={{ marginBottom: 18 }}>
-        Every service enquiry and PVC order is listed with full customer details. Admins can edit the complete file.
+        Every website and dashboard application lands here — service enquiries, PVC orders, uploaded documents, and staff notes.
       </p>
       {error ? <p style={{ color: "#f87171" }}>{error}</p> : null}
       {ok ? <p style={{ color: "#34d399" }}>{ok}</p> : null}
@@ -160,7 +164,7 @@ export default function AdminEnquiriesPage() {
         ) : filtered.length === 0 ? (
           <div className="ap-empty">
             <LottieMark kind="empty" size={140} />
-            <p>No applications in this view yet.</p>
+            <p>No customer enquiries in this view yet.</p>
           </div>
         ) : (
           <div className="ap-table-wrap">
@@ -199,6 +203,7 @@ export default function AdminEnquiriesPage() {
                       <div>{a.address || "—"}</div>
                       {a.utr ? <div className="ap-muted">UTR {a.utr}</div> : null}
                       {a.message ? <div className="ap-muted">{a.message}</div> : null}
+                      {a.notes ? <div className="ap-muted">Note: {a.notes}</div> : null}
                     </td>
                     <td>
                       <AdminFiles files={a.files} empty="—" />
@@ -299,6 +304,10 @@ export default function AdminEnquiriesPage() {
             <label>
               Message
               <textarea className="ap-textarea" rows={3} value={draft.message} onChange={(e) => setDraft({ ...draft, message: e.target.value })} />
+            </label>
+            <label>
+              Staff notes
+              <textarea className="ap-textarea" rows={3} value={draft.notes} onChange={(e) => setDraft({ ...draft, notes: e.target.value })} />
             </label>
             <div>
               <div className="ap-label">Uploaded files</div>

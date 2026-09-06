@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/JsonLd";
 import { BankSvg, WhyChooseUs } from "../page";
+import { loadPublicSettings } from "@/lib/catalog";
 import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMeta({
   title: "About Digital Service, Jaynagar",
@@ -10,7 +13,8 @@ export const metadata: Metadata = pageMeta({
   path: "/about",
 });
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const settings = await loadPublicSettings();
   return (
     <>
       <JsonLd
@@ -58,7 +62,7 @@ export default function AboutPage() {
                 Making Digital Compliance <span>Simple & Accessible</span>
               </h2>
               <p style={{ color: "var(--slate-600)", fontSize: "0.95rem", lineHeight: 1.7, marginBottom: 12 }}>
-                We are a trusted digital service provider offering a wide range of online services including AEPS, Recharge, PAN Card, GST, Income Tax, MSME Registration, Trade Licence and many more. Our goal is to make digital services simple, accessible and reliable for everyone.
+                {settings.about}
               </p>
               <p style={{ color: "var(--slate-600)", fontSize: "0.95rem", lineHeight: 1.7, marginBottom: 24 }}>
                 Whether you need AEPS cash withdrawal, urgent mobile/DTH recharge, fresh PAN card application, new GST registration, income tax filing, or MSME certification, we eliminate paperwork complexity and deliver fast results.

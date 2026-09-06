@@ -3,8 +3,9 @@
 import { FormEvent, Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
-import { SERVICES, formatInr, getService } from "@/lib/data";
-import { SITE, upiQrUrl } from "@/lib/site";
+import { formatInr, getService } from "@/lib/data";
+import { upiQrUrl } from "@/lib/site";
+import { useCatalog, useSettings } from "@/lib/cms";
 import { api, type Partner } from "@/lib/api";
 import { isPartnerRole, isStaffRole, roleLabel, serviceRequiresPartner } from "@/lib/roles";
 
@@ -21,7 +22,12 @@ function ApplyInner() {
   const router = useRouter();
   const { user, token, ready } = useAuth();
   const slug = params.get("service") || "aeps";
-  const service = useMemo(() => getService(slug), [slug]);
+  const catalog = useCatalog();
+  const settings = useSettings();
+  const service = useMemo(
+    () => catalog.find((item) => item.slug === slug) || getService(slug) || catalog[0],
+    [catalog, slug]
+  );
   const [step, setStep] = useState(1);
   const [partnerCode, setPartnerCode] = useState("");
   const [partner, setPartner] = useState<Partner | null>(null);
@@ -30,7 +36,7 @@ function ApplyInner() {
   const [interestOk, setInterestOk] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const needsPartner = serviceRequiresPartner(service.slug);
+  const needsPartner = serviceRequiresPartner(service.slug, service.requiresPartner);
   const staffPartner = isStaffRole(user?.role) || isPartnerRole(user?.role);
 
   useEffect(() => {
@@ -121,7 +127,7 @@ function ApplyInner() {
                     value={service.slug}
                     onChange={(e) => router.push(`/apply?service=${e.target.value}`)}
                   >
-                    {SERVICES.map((s) => (
+                    {catalog.map((s) => (
                       <option key={s.slug} value={s.slug}>
                         {s.title} {s.price ? ` (${formatInr(s.price)})` : ""}
                       </option>
@@ -302,7 +308,7 @@ function ApplyInner() {
                 <div style={{ background: "linear-gradient(135deg, #f0f7ff, #e0f2fe)", border: "2px solid #38bdf8", borderRadius: 16, padding: 24, marginBottom: 24 }}>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20, alignItems: "flex-start" }}>
                     <div style={{ background: "#ffffff", border: "1px solid #cbd5e1", borderRadius: 14, padding: 14, textAlign: "center", boxShadow: "0 4px 12px rgba(0,0,0,0.06)", width: "100%", boxSizing: "border-box" }}>
-                      <img src={upiQrUrl(service.price)} alt="UPI QR Code Payment" style={{ maxWidth: 170, width: "100%", height: "auto", display: "block", margin: "0 auto", borderRadius: 6 }} />
+                      <img src={upiQrUrl(service.price, settings)} alt="UPI QR Code Payment" style={{ maxWidth: 170, width: "100%", height: "auto", display: "block", margin: "0 auto", borderRadius: 6 }} />
                       <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 10, fontSize: "0.7rem", fontWeight: 700, color: "var(--slate-600)", flexWrap: "wrap" }}>
                         <span style={{ background: "#e2e8f0", padding: "2px 6px", borderRadius: 4 }}>GPay</span>
                         <span style={{ background: "#e2e8f0", padding: "2px 6px", borderRadius: 4 }}>PhonePe</span>
@@ -318,11 +324,11 @@ function ApplyInner() {
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, fontSize: "0.88rem", flexWrap: "wrap", gap: 6 }}>
                           <span style={{ color: "var(--slate-500)", fontWeight: 600 }}>UPI ID (VPA):</span>
                           <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                            <strong style={{ color: "var(--navy-deep)", letterSpacing: "0.02em", fontSize: "0.85rem" }}>{SITE.upiId}</strong>
+                            <strong style={{ color: "var(--navy-deep)", letterSpacing: "0.02em", fontSize: "0.85rem" }}>{settings.upiId}</strong>
                             <button
                               type="button"
                               onClick={() => {
-                                navigator.clipboard.writeText(SITE.upiId);
+                                navigator.clipboard.writeText(settings.upiId);
                                 alert("UPI ID copied to clipboard!");
                               }}
                               className="btn"
@@ -333,7 +339,7 @@ function ApplyInner() {
                           </div>
                         </div>
                         <div style={{ fontSize: "0.82rem", color: "var(--slate-500)" }}>
-                          <span>Payee Name: <strong>{SITE.payeeName}</strong></span>
+                          <span>Payee Name: <strong>{settings.payeeName}</strong></span>
                         </div>
                       </div>
                       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>

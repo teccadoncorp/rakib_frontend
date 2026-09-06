@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { AuthProvider } from "@/lib/auth";
+import { CmsProvider } from "@/lib/cms";
 import { SiteHeader } from "./SiteHeader";
 
 export function SiteChrome({
@@ -16,15 +17,17 @@ export function SiteChrome({
 
   return (
     <AuthProvider>
-      {isAdmin ? (
-        children
-      ) : (
-        <>
-          <SiteHeader />
-          {children}
-          {footer}
-        </>
-      )}
+      <CmsProvider>
+        {isAdmin ? (
+          children
+        ) : (
+          <>
+            <SiteHeader />
+            {children}
+            {footer}
+          </>
+        )}
+      </CmsProvider>
     </AuthProvider>
   );
 }

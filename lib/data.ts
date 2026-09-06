@@ -8,7 +8,7 @@ export type ServiceDoc = {
 };
 
 export type Service = {
-  id: number;
+  id: number | string;
   slug: string;
   title: string;
   shortTitle?: string;
@@ -21,6 +21,8 @@ export type Service = {
   priceDisplay: string;
   documents: ServiceDoc[];
   requiresPartner?: boolean;
+  active?: boolean;
+  sortOrder?: number;
 };
 
 export type PvcCard = {

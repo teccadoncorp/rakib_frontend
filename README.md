@@ -73,6 +73,18 @@ SMTP_FROM="Digital Service <noreply@localhost>"
 
 Create a superior from **Staff → Invite** with `SUPERIOR_CREATE_SECRET`.
 
+## Staff CMS
+
+The old PHP admin’s content tools are now in this staff panel:
+
+| Page | What it manages |
+| --- | --- |
+| **Site settings** | Business name, phone, email, WhatsApp, address, hours, UPI, about copy, copyright, map. These drive the public header, footer, contact page, and payment QR. |
+| **Services & docs** | Live catalog: title, slug, description, price, partner gate, and the document checklist used on the website and customer apply form. |
+| **Customer enquiries** | Every service application and PVC order, with uploaded files and staff notes. |
+
+Public pages load `/api/settings` and `/api/services`. If the API is down they fall back to the built-in Jaynagar defaults.
+
 ## Partner-gated services
 
 AEPS, All Mobile Recharge, and PAN require an active `DST-` or `RTL-` code. Demo codes: `DST-DEMO01`, `RTL-DEMO01`. Users without a code can submit interest from the apply page.

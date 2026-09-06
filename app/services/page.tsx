@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { JsonLd } from "@/components/JsonLd";
 import { MoreServicesCard, ServiceCard } from "@/components/ServiceCard";
-import { SERVICES } from "@/lib/data";
+import { loadPublicServices } from "@/lib/catalog";
 import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMeta({
   title: "Digital Services in Jaynagar",
@@ -12,7 +14,8 @@ export const metadata: Metadata = pageMeta({
   path: "/services",
 });
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await loadPublicServices();
   return (
     <>
       <JsonLd
@@ -77,7 +80,7 @@ export default function ServicesPage() {
       <section className="section" style={{ background: "#ffffff" }}>
         <div className="container">
           <div className="services-grid-6col">
-            {SERVICES.map((service) => (
+            {services.map((service) => (
               <ServiceCard key={service.slug} service={service} showTime />
             ))}
             <MoreServicesCard variant="catalog" />

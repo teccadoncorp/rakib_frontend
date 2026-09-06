@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { JsonLd } from "@/components/JsonLd";
 import { MoreServicesCard, ServiceCard } from "@/components/ServiceCard";
-import { SERVICES } from "@/lib/data";
+import { loadPublicServices, loadPublicSettings } from "@/lib/catalog";
 import { canonical, pageMeta } from "@/lib/seo";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMeta({
   title: "Digital Banking & Online Services | Digital Service - Your Digital Partner",
@@ -13,7 +15,8 @@ export const metadata: Metadata = pageMeta({
   absolute: true,
 });
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [services, settings] = await Promise.all([loadPublicServices(), loadPublicSettings()]);
   return (
     <>
       <JsonLd
@@ -21,7 +24,7 @@ export default function HomePage() {
           "@context": "https://schema.org",
           "@type": "ItemList",
           name: "Digital Service offerings",
-          itemListElement: SERVICES.map((service, index) => ({
+          itemListElement: services.map((service, index) => ({
             "@type": "ListItem",
             position: index + 1,
             name: service.title,
@@ -132,7 +135,7 @@ export default function HomePage() {
             </h2>
           </div>
           <div className="services-grid-6col">
-            {SERVICES.map((service) => (
+            {services.map((service) => (
               <ServiceCard key={service.slug} service={service} />
             ))}
             <MoreServicesCard variant="home" />
@@ -164,7 +167,7 @@ export default function HomePage() {
                 About <span>Us</span>
               </h2>
               <p style={{ color: "var(--slate-600)", fontSize: "0.92rem", lineHeight: 1.7 }}>
-                We are a trusted digital service provider offering a wide range of online services including AEPS, Recharge, PAN Card, GST, Income Tax, MSME Registration, Trade Licence and many more. Our goal is to make digital services simple, accessible and reliable for everyone.
+                {settings.about}
               </p>
               <div className="about-stats-grid">
                 <Stat icon="fa-users" value="500+" label="Happy Clients" />

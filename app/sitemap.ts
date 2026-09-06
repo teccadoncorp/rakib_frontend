@@ -1,8 +1,11 @@
 import type { MetadataRoute } from "next";
 import { PVC_CARDS, SERVICES } from "@/lib/data";
+import { loadPublicServices } from "@/lib/catalog";
 import { SITE_URL } from "@/lib/seo";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const dynamic = "force-dynamic";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const pages: MetadataRoute.Sitemap = [
     { url: SITE_URL, lastModified: now, changeFrequency: "weekly", priority: 1 },
@@ -15,7 +18,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
 
-  for (const service of SERVICES) {
+  const catalog = await loadPublicServices();
+  for (const service of catalog.length ? catalog : SERVICES) {
     pages.push({
       url: `${SITE_URL}/services/${service.slug}`,
       lastModified: now,

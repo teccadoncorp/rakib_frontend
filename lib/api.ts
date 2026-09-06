@@ -39,6 +39,7 @@ export type Application = {
   email?: string;
   address?: string;
   message?: string;
+  notes?: string;
   utr?: string;
   files?: UploadFile[];
   userId?: string;
@@ -91,12 +92,42 @@ export type StaffOverview = {
 
 export type PortalSettings = {
   name: string;
+  tagline: string;
   phone: string;
   email: string;
+  whatsapp: string;
   address: string;
   hours: string;
   upiId: string;
   payeeName: string;
+  about: string;
+  copyright: string;
+  mapEmbed: string;
+};
+
+export type CatalogService = {
+  id: string;
+  slug: string;
+  title: string;
+  shortTitle?: string;
+  description: string;
+  overview: string;
+  icon: string;
+  processingTime: string;
+  price: number | null;
+  priceLabel: string;
+  priceDisplay: string;
+  documents: {
+    name: string;
+    hint: string;
+    formats: string;
+    allowed: string;
+    maxMb: number;
+    required: boolean;
+  }[];
+  requiresPartner: boolean;
+  active: boolean;
+  sortOrder: number;
 };
 
 function networkError(err: unknown) {
@@ -175,6 +206,10 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ token, password }),
     }),
+  publicSettings: () => request<{ settings: PortalSettings }>("/api/settings"),
+  publicServices: () => request<{ services: CatalogService[] }>("/api/services"),
+  publicService: (slug: string) =>
+    request<{ service: CatalogService }>(`/api/services/${encodeURIComponent(slug)}`),
   contact: (payload: Record<string, string>) =>
     request<{ ok: boolean }>("/api/contact", {
       method: "POST",
@@ -266,6 +301,25 @@ export const api = {
       method: "PATCH",
       token,
       body: JSON.stringify(payload),
+    }),
+  staffServices: (token: string) =>
+    request<{ services: CatalogService[] }>("/api/staff/services", { token }),
+  createService: (token: string, payload: Record<string, unknown>) =>
+    request<{ service: CatalogService }>("/api/staff/services", {
+      method: "POST",
+      token,
+      body: JSON.stringify(payload),
+    }),
+  patchService: (token: string, id: string, payload: Record<string, unknown>) =>
+    request<{ service: CatalogService }>(`/api/staff/services/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      token,
+      body: JSON.stringify(payload),
+    }),
+  deleteService: (token: string, id: string) =>
+    request<{ ok: boolean }>(`/api/staff/services/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      token,
     }),
   adminUsers: (token: string) =>
     request<{ users: User[] }>("/api/staff/users", { token }),

@@ -32,7 +32,7 @@ export default function AdminHome() {
       <div className="ap-kicker">Live network</div>
       <h1 className="ap-title">Good to see you, {user?.name.split(" ")[0]}</h1>
       <p className="ap-sub" style={{ marginBottom: 22 }}>
-        {roleLabel(user?.role)} workspace for Digital Service — every customer, application, invite and partner interest.
+        {roleLabel(user?.role)} workspace for Digital Service — site settings, services & docs, customer enquiries, and the partner network.
       </p>
       {!data ? (
         <div className="ap-empty">
@@ -43,7 +43,7 @@ export default function AdminHome() {
           <Kpi label="Customers" value={data.users} icon="fa-user" />
           <Kpi label="Distributors" value={data.distributors} icon="fa-sitemap" />
           <Kpi label="Retailers" value={data.retailers} icon="fa-shop" />
-          <Kpi label="Applications" value={data.applications} icon="fa-folder-open" />
+          <Kpi label="Customer enquiries" value={data.applications} icon="fa-folder-open" />
           <Kpi label="In motion" value={data.pending} icon="fa-bolt" />
           <Kpi label="Completed" value={data.completed} icon="fa-circle-check" />
           <Kpi label="Open interests" value={data.interests} icon="fa-hand" />

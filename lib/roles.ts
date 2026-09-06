@@ -34,7 +34,8 @@ export function isPartnerRole(role?: string | null) {
   return PARTNER_ROLES.includes(r as Role);
 }
 
-export function serviceRequiresPartner(slug?: string | null) {
+export function serviceRequiresPartner(slug?: string | null, flag?: boolean) {
+  if (typeof flag === "boolean") return flag;
   return PARTNER_REQUIRED_SLUGS.includes((slug || "") as (typeof PARTNER_REQUIRED_SLUGS)[number]);
 }
 
@@ -65,11 +66,11 @@ export const STAFF_NAV: NavItem[] = [
   { href: "/admin", label: "Overview", icon: "fa-gauge-high", roles: STAFF_ROLES },
   { href: "/admin/users", label: "People", icon: "fa-users", roles: ["admin", "superior", "distributor"] },
   { href: "/admin/invite", label: "Invite", icon: "fa-user-plus", roles: ["admin", "superior", "distributor"] },
-  { href: "/admin/enquiries", label: "Applications", icon: "fa-folder-open", roles: STAFF_ROLES },
+  { href: "/admin/enquiries", label: "Customer enquiries", icon: "fa-folder-open", roles: STAFF_ROLES },
   { href: "/admin/interests", label: "Interests", icon: "fa-hand", roles: ["admin", "superior"] },
   { href: "/admin/contacts", label: "Inbox", icon: "fa-envelope-open-text", roles: ["admin", "superior"] },
-  { href: "/admin/services", label: "Services", icon: "fa-briefcase", roles: STAFF_ROLES },
-  { href: "/admin/settings", label: "Settings", icon: "fa-sliders", roles: ["admin", "superior"] },
+  { href: "/admin/services", label: "Services & docs", icon: "fa-briefcase", roles: STAFF_ROLES },
+  { href: "/admin/settings", label: "Site settings", icon: "fa-sliders", roles: ["admin", "superior"] },
 ];
 
 export function navForRole(role?: string | null) {

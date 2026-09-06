@@ -5,7 +5,8 @@ import { FormEvent, Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { formatInr, getPvc } from "@/lib/data";
-import { SITE, upiQrUrl } from "@/lib/site";
+import { upiQrUrl } from "@/lib/site";
+import { useSettings } from "@/lib/cms";
 import { api } from "@/lib/api";
 
 export default function PvcDetailsPage() {
@@ -20,6 +21,7 @@ function PvcInner() {
   const params = useSearchParams();
   const router = useRouter();
   const { user, token, ready } = useAuth();
+  const settings = useSettings();
   const card = useMemo(() => getPvc(params.get("card")), [params]);
   const [step, setStep] = useState(1);
   const [qty, setQty] = useState(1);
@@ -198,7 +200,7 @@ function PvcInner() {
                 <div style={{ background: "linear-gradient(135deg, #f0f7ff, #e0f2fe)", border: "2px solid #38bdf8", borderRadius: 16, padding: 22, marginBottom: 24 }}>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20, alignItems: "flex-start" }}>
                     <div style={{ background: "#ffffff", border: "1px solid #cbd5e1", borderRadius: 14, padding: 14, textAlign: "center", boxShadow: "0 4px 12px rgba(0,0,0,0.06)" }}>
-                      <img src={upiQrUrl(total)} alt="UPI Payment QR Code" style={{ maxWidth: 170, width: "100%", height: "auto", display: "block", margin: "0 auto", borderRadius: 6 }} />
+                      <img src={upiQrUrl(total, settings)} alt="UPI Payment QR Code" style={{ maxWidth: 170, width: "100%", height: "auto", display: "block", margin: "0 auto", borderRadius: 6 }} />
                       <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 10, fontSize: "0.7rem", fontWeight: 700, color: "var(--slate-600)", flexWrap: "wrap" }}>
                         <span style={{ background: "#e2e8f0", padding: "2px 6px", borderRadius: 4 }}>GPay</span>
                         <span style={{ background: "#e2e8f0", padding: "2px 6px", borderRadius: 4 }}>PhonePe</span>
@@ -210,14 +212,14 @@ function PvcInner() {
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6, fontSize: "0.88rem" }}>
                           <span style={{ color: "var(--slate-500)", fontWeight: 600 }}>UPI ID (VPA):</span>
                           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                            <strong style={{ color: "var(--navy-deep)" }}>{SITE.upiId}</strong>
-                            <button type="button" onClick={() => { navigator.clipboard.writeText(SITE.upiId); alert("UPI ID copied to clipboard!"); }} className="btn" style={{ padding: "2px 8px", fontSize: "0.72rem", background: "var(--sky-accent)", color: "var(--primary-blue)", borderRadius: 4 }}>
+                            <strong style={{ color: "var(--navy-deep)" }}>{settings.upiId}</strong>
+                            <button type="button" onClick={() => { navigator.clipboard.writeText(settings.upiId); alert("UPI ID copied to clipboard!"); }} className="btn" style={{ padding: "2px 8px", fontSize: "0.72rem", background: "var(--sky-accent)", color: "var(--primary-blue)", borderRadius: 4 }}>
                               <i className="fa-solid fa-copy"></i> Copy
                             </button>
                           </div>
                         </div>
                         <div style={{ fontSize: "0.82rem", color: "var(--slate-500)" }}>
-                          Payee Name: <strong>{SITE.payeeName}</strong>
+                          Payee Name: <strong>{settings.payeeName}</strong>
                         </div>
                       </div>
                       <p style={{ fontSize: "0.82rem", color: "var(--slate-600)", marginBottom: 14, lineHeight: 1.4 }}>

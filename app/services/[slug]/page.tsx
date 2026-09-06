@@ -3,9 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/JsonLd";
 import { SERVICES } from "@/lib/data";
+import { loadPublicService } from "@/lib/catalog";
 import { breadcrumbJsonLd, pageMeta, serviceJsonLd } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
+
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return SERVICES.map((service) => ({ slug: service.slug }));
@@ -13,7 +17,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const service = SERVICES.find((item) => item.slug === slug);
+  const service = (await loadPublicService(slug)) || SERVICES.find((item) => item.slug === slug);
   if (!service) return pageMeta({ title: "Service not found", path: "/services", index: false });
   return pageMeta({
     title: `${service.title} in Jaynagar`,
@@ -25,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ServiceDetailsPage({ params }: Props) {
   const { slug } = await params;
-  const service = SERVICES.find((item) => item.slug === slug);
+  const service = await loadPublicService(slug);
   if (!service) notFound();
 
   return (
