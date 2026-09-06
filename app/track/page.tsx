@@ -7,7 +7,7 @@ import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
 export const metadata: Metadata = pageMeta({
   title: "Track Application Status",
   description:
-    "Track your Digital Service enquiry or PVC card order with your reference ID (ENQ / PVC) or 10-digit mobile number.",
+    "Track your Digital Service enquiry or PVC card order with your reference ID (ENQ / PVC) or 10-digit mobile number, and download completed documents when staff issue them.",
   path: "/track",
 });
 
@@ -26,7 +26,7 @@ export default async function TrackPage({ searchParams }: Props) {
       />
       <PageBanner
         title="Track Application Status"
-        subtitle="Enter your Reference ID (e.g. ENQ-20260814-0001) or 10-digit Mobile Number to check live progress."
+        subtitle="Enter your Reference ID (e.g. ENQ-20260814-0001) or 10-digit Mobile Number to check live progress and download completed documents."
       />
       <section className="section" style={{ background: "#f8fafc" }}>
         <div className="container">

@@ -42,6 +42,7 @@ export type Application = {
   notes?: string;
   utr?: string;
   files?: UploadFile[];
+  deliveries?: UploadFile[];
   userId?: string;
   partnerId?: string;
   partnerCode?: string;
@@ -303,6 +304,17 @@ export const api = {
       token,
       body: JSON.stringify(typeof payload === "string" ? { status: payload } : payload),
     }),
+  uploadDelivery: (token: string, id: string, form: FormData) =>
+    request<{ application: Application }>(`/api/staff/applications/${id}/deliveries`, {
+      method: "POST",
+      token,
+      body: form,
+    }),
+  deleteDelivery: (token: string, id: string, name: string) =>
+    request<{ application: Application }>(
+      `/api/staff/applications/${id}/deliveries/${encodeURIComponent(name)}`,
+      { method: "DELETE", token }
+    ),
   staffInterests: (token: string) =>
     request<{ interests: Interest[] }>("/api/staff/interests", { token }),
   patchInterest: (token: string, id: string, status: string) =>

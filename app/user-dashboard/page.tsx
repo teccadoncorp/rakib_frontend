@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
+import { DeliveryFiles } from "@/components/DeliveryFiles";
 import { api, type Application, type Interest } from "@/lib/api";
 import { useCatalog } from "@/lib/cms";
 import { formatInr } from "@/lib/data";
@@ -143,6 +144,7 @@ export default function DashboardPage() {
                       <th style={{ padding: "10px 8px" }}>Service</th>
                       <th style={{ padding: "10px 8px" }}>Status</th>
                       <th style={{ padding: "10px 8px" }}>Date</th>
+                      <th style={{ padding: "10px 8px" }}>Your documents</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -152,6 +154,13 @@ export default function DashboardPage() {
                         <td style={{ padding: "12px 8px" }}>{item.title}</td>
                         <td style={{ padding: "12px 8px", textTransform: "capitalize" }}>{item.status.replace("_", " ")}</td>
                         <td style={{ padding: "12px 8px" }}>{new Date(item.createdAt).toLocaleDateString("en-IN")}</td>
+                        <td style={{ padding: "12px 8px" }}>
+                          <DeliveryFiles
+                            files={item.deliveries}
+                            title="Ready to download"
+                            empty="Not issued yet"
+                          />
+                        </td>
                       </tr>
                     ))}
                   </tbody>

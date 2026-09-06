@@ -10,7 +10,15 @@ function isImage(name: string) {
   return /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(name);
 }
 
-export function AdminFiles({ files, empty = "No files uploaded." }: { files?: UploadFile[] | string[]; empty?: string }) {
+export function AdminFiles({
+  files,
+  empty = "No files uploaded.",
+  onRemove,
+}: {
+  files?: UploadFile[] | string[];
+  empty?: string;
+  onRemove?: (name: string) => void;
+}) {
   const items: UploadFile[] = (files || []).map((entry) =>
     typeof entry === "string" ? { name: entry, label: entry } : entry
   ).filter((item) => item.name);
@@ -37,6 +45,11 @@ export function AdminFiles({ files, empty = "No files uploaded." }: { files?: Up
             )}
             <a href={href} target="_blank" rel="noreferrer">{label}</a>
             {file.ref ? <span className="ap-muted">{file.ref}</span> : null}
+            {onRemove ? (
+              <button type="button" className="ap-btn ghost" onClick={() => onRemove(file.name)}>
+                Remove
+              </button>
+            ) : null}
           </li>
         );
       })}

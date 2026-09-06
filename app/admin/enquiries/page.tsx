@@ -55,6 +55,8 @@ export default function AdminEnquiriesPage() {
   const [error, setError] = useState("");
   const [ok, setOk] = useState("");
   const [saving, setSaving] = useState(false);
+  const [deliveryLabel, setDeliveryLabel] = useState("");
+  const [deliveryBusy, setDeliveryBusy] = useState(false);
   const canEditAll = user?.role === "admin" || user?.role === "superior";
 
   async function load() {
@@ -93,8 +95,52 @@ export default function AdminEnquiriesPage() {
   function openEdit(a: Application) {
     setError("");
     setOk("");
+    setDeliveryLabel("");
     setEditing(a);
     setDraft(draftFromApp(a));
+  }
+
+  async function refreshEditing(next: Application) {
+    setEditing(next);
+    setDraft(draftFromApp(next));
+    await load();
+  }
+
+  async function onUploadDelivery(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!token || !editing) return;
+    const formEl = e.currentTarget;
+    const form = new FormData(formEl);
+    if (deliveryLabel.trim()) form.set("label", deliveryLabel.trim());
+    setDeliveryBusy(true);
+    setError("");
+    setOk("");
+    try {
+      const res = await api.uploadDelivery(token, editing.id, form);
+      formEl.reset();
+      setDeliveryLabel("");
+      setOk(`Document sent to the customer for ${res.application.ref}.`);
+      await refreshEditing(res.application);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not upload this document.");
+    } finally {
+      setDeliveryBusy(false);
+    }
+  }
+
+  async function onRemoveDelivery(name: string) {
+    if (!token || !editing) return;
+    setDeliveryBusy(true);
+    setError("");
+    try {
+      const res = await api.deleteDelivery(token, editing.id, name);
+      setOk("Issued document removed.");
+      await refreshEditing(res.application);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not remove this document.");
+    } finally {
+      setDeliveryBusy(false);
+    }
   }
 
   async function onSave(e: FormEvent) {
@@ -136,7 +182,7 @@ export default function AdminEnquiriesPage() {
       <div className="ap-kicker">CMS</div>
       <h1 className="ap-title">Customer enquiries</h1>
       <p className="ap-sub" style={{ marginBottom: 18 }}>
-        Every website and dashboard application lands here — service enquiries, PVC orders, uploaded documents, and staff notes.
+        Review customer details, then upload the finished document — trade licence PDF, report, or certificate — so that customer can download it.
       </p>
       {error ? <p style={{ color: "#f87171" }}>{error}</p> : null}
       {ok ? <p style={{ color: "#34d399" }}>{ok}</p> : null}
@@ -184,7 +230,8 @@ export default function AdminEnquiriesPage() {
                   <th>Service</th>
                   <th>Customer</th>
                   <th>Details</th>
-                  <th>Files</th>
+                  <th>Customer files</th>
+                  <th>Issued docs</th>
                   <th>Partner</th>
                   <th>Status</th>
                   <th></th>
@@ -225,6 +272,9 @@ export default function AdminEnquiriesPage() {
                     <td>
                       <AdminFiles files={a.files} empty="—" />
                     </td>
+                    <td>
+                      <AdminFiles files={a.deliveries} empty="Not sent" />
+                    </td>
                     <td>{a.partnerCode || "—"}</td>
                     <td>
                       <select
@@ -243,11 +293,9 @@ export default function AdminEnquiriesPage() {
                       </select>
                     </td>
                     <td>
-                      {canEditAll ? (
-                        <button type="button" className="ap-btn ghost" onClick={() => openEdit(a)}>
-                          Edit
-                        </button>
-                      ) : null}
+                      <button type="button" className="ap-btn ghost" onClick={() => openEdit(a)}>
+                        {canEditAll ? "Edit" : "Issue docs"}
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -258,7 +306,7 @@ export default function AdminEnquiriesPage() {
       </div>
 
       {editing && draft ? (
-        <AdminModal title={`Edit ${editing.ref}`} onClose={() => { setEditing(null); setDraft(null); }}>
+        <AdminModal title={`${canEditAll ? "Edit" : "Issue documents"} ${editing.ref}`} onClose={() => { setEditing(null); setDraft(null); }}>
           <form onSubmit={onSave} className="ap-form">
             <div className="ap-form-grid">
               <label>
@@ -270,69 +318,106 @@ export default function AdminEnquiriesPage() {
                   <option value="rejected">rejected</option>
                 </select>
               </label>
-              <label>
-                Type
-                <select className="ap-select" value={draft.type} onChange={(e) => setDraft({ ...draft, type: e.target.value as Application["type"] })}>
-                  <option value="service">service</option>
-                  <option value="pvc">pvc</option>
-                </select>
-              </label>
-              <label>
-                Title
-                <input className="ap-input" value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
-              </label>
-              <label>
-                Service slug
-                <input className="ap-input" value={draft.serviceSlug} onChange={(e) => setDraft({ ...draft, serviceSlug: e.target.value })} />
-              </label>
-              <label>
-                Customer name
-                <input className="ap-input" required value={draft.customerName} onChange={(e) => setDraft({ ...draft, customerName: e.target.value })} />
-              </label>
-              <label>
-                Mobile
-                <input className="ap-input" required value={draft.mobile} onChange={(e) => setDraft({ ...draft, mobile: e.target.value })} />
-              </label>
-              <label>
-                Email
-                <input className="ap-input" type="email" value={draft.email} onChange={(e) => setDraft({ ...draft, email: e.target.value })} />
-              </label>
-              <label>
-                Amount
-                <input className="ap-input" value={draft.amount} onChange={(e) => setDraft({ ...draft, amount: e.target.value })} />
-              </label>
-              <label>
-                Partner code
-                <input className="ap-input" value={draft.partnerCode} onChange={(e) => setDraft({ ...draft, partnerCode: e.target.value })} />
-              </label>
-              <label>
-                Partner role
-                <input className="ap-input" value={draft.partnerRole} onChange={(e) => setDraft({ ...draft, partnerRole: e.target.value })} />
-              </label>
-              <label>
-                UTR
-                <input className="ap-input" value={draft.utr} onChange={(e) => setDraft({ ...draft, utr: e.target.value })} />
-              </label>
+              {canEditAll ? (
+                <>
+                  <label>
+                    Type
+                    <select className="ap-select" value={draft.type} onChange={(e) => setDraft({ ...draft, type: e.target.value as Application["type"] })}>
+                      <option value="service">service</option>
+                      <option value="pvc">pvc</option>
+                    </select>
+                  </label>
+                  <label>
+                    Title
+                    <input className="ap-input" value={draft.title} onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
+                  </label>
+                  <label>
+                    Service slug
+                    <input className="ap-input" value={draft.serviceSlug} onChange={(e) => setDraft({ ...draft, serviceSlug: e.target.value })} />
+                  </label>
+                  <label>
+                    Customer name
+                    <input className="ap-input" required value={draft.customerName} onChange={(e) => setDraft({ ...draft, customerName: e.target.value })} />
+                  </label>
+                  <label>
+                    Mobile
+                    <input className="ap-input" required value={draft.mobile} onChange={(e) => setDraft({ ...draft, mobile: e.target.value })} />
+                  </label>
+                  <label>
+                    Email
+                    <input className="ap-input" type="email" value={draft.email} onChange={(e) => setDraft({ ...draft, email: e.target.value })} />
+                  </label>
+                  <label>
+                    Amount
+                    <input className="ap-input" value={draft.amount} onChange={(e) => setDraft({ ...draft, amount: e.target.value })} />
+                  </label>
+                  <label>
+                    Partner code
+                    <input className="ap-input" value={draft.partnerCode} onChange={(e) => setDraft({ ...draft, partnerCode: e.target.value })} />
+                  </label>
+                  <label>
+                    Partner role
+                    <input className="ap-input" value={draft.partnerRole} onChange={(e) => setDraft({ ...draft, partnerRole: e.target.value })} />
+                  </label>
+                  <label>
+                    UTR
+                    <input className="ap-input" value={draft.utr} onChange={(e) => setDraft({ ...draft, utr: e.target.value })} />
+                  </label>
+                </>
+              ) : (
+                <label>
+                  Customer
+                  <input className="ap-input" value={`${draft.customerName} · ${draft.mobile}`} readOnly />
+                </label>
+              )}
             </div>
-            <label>
-              Address
-              <textarea className="ap-textarea" rows={2} value={draft.address} onChange={(e) => setDraft({ ...draft, address: e.target.value })} />
-            </label>
-            <label>
-              Message
-              <textarea className="ap-textarea" rows={3} value={draft.message} onChange={(e) => setDraft({ ...draft, message: e.target.value })} />
-            </label>
+            {canEditAll ? (
+              <>
+                <label>
+                  Address
+                  <textarea className="ap-textarea" rows={2} value={draft.address} onChange={(e) => setDraft({ ...draft, address: e.target.value })} />
+                </label>
+                <label>
+                  Message
+                  <textarea className="ap-textarea" rows={3} value={draft.message} onChange={(e) => setDraft({ ...draft, message: e.target.value })} />
+                </label>
+              </>
+            ) : null}
             <label>
               Staff notes
-              <textarea className="ap-textarea" rows={3} value={draft.notes} onChange={(e) => setDraft({ ...draft, notes: e.target.value })} />
+              <textarea className="ap-textarea" rows={3} value={draft.notes} onChange={(e) => setDraft({ ...draft, notes: e.target.value })} placeholder="Shown to the customer on Track Status." />
             </label>
             <div>
-              <div className="ap-label">Uploaded files</div>
-              <AdminFiles files={editing.files} />
+              <div className="ap-label">Customer uploads</div>
+              <AdminFiles files={editing.files} empty="Customer did not attach files." />
             </div>
             <div className="ap-actions">
               <button className="ap-btn" disabled={saving}>{saving ? "Saving..." : "Save application"}</button>
-              <button type="button" className="ap-btn ghost" onClick={() => { setEditing(null); setDraft(null); }}>Cancel</button>
+              <button type="button" className="ap-btn ghost" onClick={() => { setEditing(null); setDraft(null); }}>Close</button>
+            </div>
+          </form>
+
+          <form onSubmit={onUploadDelivery} className="ap-form" style={{ marginTop: 22, paddingTop: 18, borderTop: "1px solid #e2e8f0" }}>
+            <div className="ap-label">Issue completed documents</div>
+            <p className="ap-muted" style={{ margin: "6px 0 12px" }}>
+              Upload the finished file for this application — for example the trade licence PDF. Only this customer can see it on Track Status and their dashboard.
+            </p>
+            <AdminFiles files={editing.deliveries} empty="No document issued yet." onRemove={onRemoveDelivery} />
+            <label>
+              Document name
+              <input
+                className="ap-input"
+                value={deliveryLabel}
+                onChange={(e) => setDeliveryLabel(e.target.value)}
+                placeholder="Trade licence PDF"
+              />
+            </label>
+            <label>
+              File
+              <input className="ap-input" type="file" name="deliveries" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx" multiple required />
+            </label>
+            <div className="ap-actions">
+              <button className="ap-btn" disabled={deliveryBusy}>{deliveryBusy ? "Sending..." : "Send to customer"}</button>
             </div>
           </form>
         </AdminModal>

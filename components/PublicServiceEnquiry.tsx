@@ -25,7 +25,7 @@ export function PublicServiceEnquiry({ service }: { service: Service }) {
       const res = await api.publicEnquiry(form);
       const ref = res.application?.ref || "";
       setSuccess(
-        `${settings.enquirySuccess || "Your enquiry has been submitted successfully."} ${ref ? `Your reference ID is ${ref}. Use it on the Track Status page.` : ""}`.trim()
+        `${settings.enquirySuccess || "Your enquiry has been submitted successfully."} ${ref ? `Your reference ID is ${ref}. Use Track Status to follow progress and download completed documents such as a trade licence PDF.` : ""}`.trim()
       );
       formEl.reset();
     } catch (err) {
@@ -56,7 +56,7 @@ export function PublicServiceEnquiry({ service }: { service: Service }) {
         Send an enquiry for {service.title}
       </h3>
       <p style={{ fontSize: "0.85rem", color: "var(--slate-500)", margin: "0 0 16px" }}>
-        No login needed. Fill the details below, or call / WhatsApp the number above.
+        No login needed. After we finish the work, the completed document for this application appears on Track Status.
       </p>
       {error ? <div className="alert alert-danger">{error}</div> : null}
       {success ? <div className="alert alert-success">{success}</div> : null}

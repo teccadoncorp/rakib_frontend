@@ -32,7 +32,7 @@ export default function AdminHome() {
       <div className="ap-kicker">Live network</div>
       <h1 className="ap-title">Good to see you, {user?.name.split(" ")[0]}</h1>
       <p className="ap-sub" style={{ marginBottom: 22 }}>
-        {roleLabel(user?.role)} workspace for Digital Service — site settings, services & docs, customer enquiries, and the partner network.
+        {roleLabel(user?.role)} workspace for Digital Service — site settings, services & docs, customer enquiries, and issuing completed documents.
       </p>
       {!data ? (
         <div className="ap-empty">

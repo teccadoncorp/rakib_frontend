@@ -81,7 +81,7 @@ The old PHP admin’s content tools are now in this staff panel:
 | --- | --- |
 | **Site settings** | Business name, phone, email, WhatsApp, address, hours, UPI, about copy, copyright, map. These drive the public header, footer, contact page, and payment QR. |
 | **Services & docs** | Live catalog: title, slug, description, price, partner gate, and the document checklist used on the website and customer apply form. |
-| **Customer enquiries** | Every service application and PVC order, with uploaded files and staff notes. |
+| **Customer enquiries** | Every service application and PVC order, with customer uploads, staff notes, and issued documents (trade licence PDF, reports) that only that customer can download. |
 
 Public pages load `/api/settings` and `/api/services`. If the API is down they fall back to the built-in Jaynagar defaults.
 

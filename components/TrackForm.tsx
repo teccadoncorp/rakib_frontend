@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { DeliveryFiles } from "@/components/DeliveryFiles";
 import { api, type Application } from "@/lib/api";
 
 export function TrackForm({ initialRef = "" }: { initialRef?: string }) {
@@ -103,6 +104,11 @@ export function TrackForm({ initialRef = "" }: { initialRef?: string }) {
                   No admin remarks yet. Check again after our team reviews this file.
                 </p>
               )}
+              <DeliveryFiles
+                files={item.deliveries}
+                title="Completed documents for you"
+                empty="No completed document has been issued yet. When our team finishes this file, the PDF or report will appear here."
+              />
             </article>
           ))}
         </div>
