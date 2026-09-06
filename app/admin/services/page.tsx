@@ -6,7 +6,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { LottieMark } from "@/components/LottieMark";
 import { useAuth } from "@/lib/auth";
 import { api, type CatalogService } from "@/lib/api";
-import { emptyDoc } from "@/lib/catalog";
+import { emptyDoc, FALLBACK_CATALOG } from "@/lib/catalog";
 import { formatInr, type ServiceDoc } from "@/lib/data";
 
 type Draft = {
@@ -49,22 +49,41 @@ function draftFrom(service?: CatalogService | null): Draft {
 
 export default function AdminServicesPage() {
   const { token, user } = useAuth();
-  const [services, setServices] = useState<CatalogService[] | null>(null);
+  const [services, setServices] = useState<CatalogService[]>(FALLBACK_CATALOG);
   const [q, setQ] = useState("");
   const [editing, setEditing] = useState<Draft | null>(null);
   const [error, setError] = useState("");
   const [ok, setOk] = useState("");
   const [saving, setSaving] = useState(false);
+  const [usingFallback, setUsingFallback] = useState(false);
   const canEdit = user?.role === "admin" || user?.role === "superior";
 
   async function load() {
-    if (!token) return;
-    const res = await api.staffServices(token);
-    setServices(res.services);
+    if (!token) {
+      setServices(FALLBACK_CATALOG);
+      setUsingFallback(true);
+      return;
+    }
+    try {
+      const res = await api.staffServices(token);
+      const list = Array.isArray(res.services) ? res.services : [];
+      if (list.length) {
+        setServices(list);
+        setUsingFallback(false);
+        setError("");
+      } else {
+        setServices(FALLBACK_CATALOG);
+        setUsingFallback(true);
+      }
+    } catch (err) {
+      setServices(FALLBACK_CATALOG);
+      setUsingFallback(true);
+      setError(err instanceof Error ? err.message : "Could not load the live catalog. Showing the built-in services.");
+    }
   }
 
   useEffect(() => {
-    load().catch(() => setServices([]));
+    load();
   }, [token]);
 
   const filtered = useMemo(() => {
@@ -144,6 +163,11 @@ export default function AdminServicesPage() {
         This catalog is the CMS for the public website, apply form, and customer dashboard. Titles, prices, partner gates, and required documents all come from here.
       </p>
       {error ? <p style={{ color: "#b91c1c" }}>{error}</p> : null}
+      {usingFallback ? (
+        <p className="ap-sub" style={{ marginBottom: 12 }}>
+          Showing the built-in catalog. Save a service once the API is connected to store it in the CMS.
+        </p>
+      ) : null}
       {ok ? <p style={{ color: "#047857" }}>{ok}</p> : null}
 
       <div className="ap-card" style={{ marginBottom: 16, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
@@ -158,12 +182,10 @@ export default function AdminServicesPage() {
         )}
       </div>
 
-      {!services ? (
-        <div className="ap-empty"><LottieMark kind="loader" size={110} /></div>
-      ) : filtered.length === 0 ? (
+      {filtered.length === 0 ? (
         <div className="ap-empty">
           <LottieMark kind="empty" size={140} />
-          <p>No services in this view. Add one to publish it on the website.</p>
+          <p>No services match this search. Clear the filter or add a service.</p>
         </div>
       ) : (
         <div style={{ display: "grid", gap: 12 }}>
@@ -171,7 +193,7 @@ export default function AdminServicesPage() {
             <div key={s.id} className="ap-card" style={{ animationDelay: `${i * 40}ms`, display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
               <div>
                 <strong>{s.title}</strong>
-                <div className="ap-muted">/{s.slug} · {s.documents.length} document{s.documents.length === 1 ? "" : "s"}</div>
+                <div className="ap-muted">/{s.slug} · {(s.documents || []).length} document{(s.documents || []).length === 1 ? "" : "s"}</div>
                 <p className="ap-sub" style={{ margin: "6px 0 0", fontSize: "0.88rem" }}>{s.description}</p>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
                   {s.active === false ? <span className="ap-chip">Hidden</span> : <span className="ap-chip">Live</span>}

@@ -19,6 +19,28 @@ export function settingsFromApi(partial?: Partial<PortalSettings> | null): SiteI
   });
 }
 
+export function toCatalogService(service: Service, index = 0): CatalogService {
+  return {
+    id: String(service.id ?? service.slug ?? index + 1),
+    slug: service.slug,
+    title: service.title,
+    shortTitle: service.shortTitle || "",
+    description: service.description || "",
+    overview: service.overview || "",
+    icon: service.icon || "fa-briefcase",
+    processingTime: service.processingTime || "",
+    price: service.price == null ? null : Number(service.price),
+    priceLabel: service.priceLabel || "",
+    priceDisplay: service.priceDisplay || "",
+    documents: Array.isArray(service.documents) ? service.documents : [],
+    requiresPartner: Boolean(service.requiresPartner),
+    active: service.active !== false,
+    sortOrder: Number(service.sortOrder || index + 1),
+  };
+}
+
+export const FALLBACK_CATALOG = SERVICES.map(toCatalogService);
+
 export function emptyDoc(): ServiceDoc {
   return {
     name: "",

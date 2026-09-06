@@ -27,7 +27,20 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!user || !isStaffRole(user.role)) return null;
+  if (!user || !isStaffRole(user.role)) {
+    return (
+      <div className="ap-login">
+        <div className="ap-card" style={{ maxWidth: 420, margin: "12vh auto" }}>
+          <div className="ap-kicker">Staff portal</div>
+          <h1 className="ap-title">Sign in to continue</h1>
+          <p className="ap-sub">Services & docs, site settings, and customer enquiries need a staff account.</p>
+          <a className="ap-btn" href="/admin/login" style={{ display: "inline-block", marginTop: 16, textAlign: "center" }}>
+            Open staff login
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   const links = navForRole(user.role);
 
