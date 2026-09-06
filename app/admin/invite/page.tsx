@@ -89,7 +89,7 @@ export default function InvitePage() {
       {inviteUrl ? (
         <div className="ap-card" style={{ marginBottom: 16 }}>
           <div className="ap-label">SMTP is not configured — share this link now</div>
-          <p style={{ wordBreak: "break-all", color: "#7dd3fc" }}>{inviteUrl}</p>
+          <p className="ap-ref" style={{ wordBreak: "break-all" }}>{inviteUrl}</p>
         </div>
       ) : null}
 

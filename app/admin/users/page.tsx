@@ -5,6 +5,7 @@ import { AdminModal } from "@/components/AdminModal";
 import { AdminShell } from "@/components/AdminShell";
 import { LottieMark } from "@/components/LottieMark";
 import { useAuth } from "@/lib/auth";
+import { AdminFiles } from "@/components/AdminFiles";
 import { api, type User } from "@/lib/api";
 import { roleLabel, type Role } from "@/lib/roles";
 
@@ -240,6 +241,7 @@ export default function AdminUsersPage() {
                   <th>Codes</th>
                   <th>Contact</th>
                   <th>Address</th>
+                  <th>Files</th>
                   <th>Status</th>
                   <th></th>
                 </tr>
@@ -249,7 +251,7 @@ export default function AdminUsersPage() {
                   <tr key={u.id}>
                     <td>
                       <strong>{u.name}</strong>
-                      <div style={{ color: "#94a3b8", fontSize: "0.78rem" }}>{u.userCode || "—"}</div>
+                      <div className="ap-muted">{u.userCode || "—"}</div>
                     </td>
                     <td>
                       <span className={`ap-role ${u.role}`}>{roleLabel(u.role)}</span>
@@ -257,9 +259,12 @@ export default function AdminUsersPage() {
                     <td style={{ fontFamily: "monospace" }}>{u.partnerCode || "—"}</td>
                     <td>
                       {u.mobile}
-                      <div style={{ color: "#94a3b8", fontSize: "0.78rem" }}>{u.email || "—"}</div>
+                      <div className="ap-muted">{u.email || "—"}</div>
                     </td>
                     <td style={{ maxWidth: 180 }}>{u.address || "—"}</td>
+                    <td>
+                      <AdminFiles files={u.files} empty="—" />
+                    </td>
                     <td>
                       <select
                         className="ap-select"
@@ -300,6 +305,10 @@ export default function AdminUsersPage() {
               isAdmin={isAdmin}
               passwordHint="Leave blank to keep the current password"
             />
+            <div>
+              <div className="ap-label">Uploaded files</div>
+              <AdminFiles files={editing.files} />
+            </div>
             <div className="ap-actions">
               <button className="ap-btn" disabled={saving}>{saving ? "Saving..." : "Save changes"}</button>
               <button type="button" className="ap-btn ghost" onClick={() => setEditing(null)}>Cancel</button>

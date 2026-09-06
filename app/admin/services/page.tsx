@@ -15,15 +15,15 @@ export default function AdminServicesPage() {
         {SERVICES.map((s, i) => (
           <div key={s.slug} className="ap-card" style={{ animationDelay: `${i * 40}ms`, display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
             <div>
-              <strong style={{ color: "#fff" }}>{s.title}</strong>
-              <p style={{ color: "#94a3b8", margin: "6px 0 0", fontSize: "0.88rem" }}>{s.description}</p>
+              <strong>{s.title}</strong>
+              <p className="ap-sub" style={{ margin: "6px 0 0", fontSize: "0.88rem" }}>{s.description}</p>
               {s.requiresPartner ? (
                 <span className="ap-chip" style={{ display: "inline-block", marginTop: 10 }}>Needs retailer / distributor ID</span>
               ) : null}
             </div>
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontWeight: 800, color: "#7dd3fc" }}>{s.price ? formatInr(s.price) : "As Applicable"}</div>
-              <div style={{ fontSize: "0.8rem", color: "#94a3b8" }}>{s.processingTime}</div>
+              <div style={{ fontWeight: 800, color: "#0d6efd" }}>{s.price ? formatInr(s.price) : "As Applicable"}</div>
+              <div className="ap-muted">{s.processingTime}</div>
             </div>
           </div>
         ))}

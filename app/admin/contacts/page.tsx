@@ -43,7 +43,7 @@ export default function ContactsPage() {
                   <tr key={row.id}>
                     <td>
                       {row.name}
-                      <div style={{ color: "#94a3b8", fontSize: "0.78rem" }}>{row.phone} · {row.email}</div>
+                      <div className="ap-muted">{row.phone} · {row.email}</div>
                     </td>
                     <td>{row.subject || "—"}</td>
                     <td>{row.message}</td>

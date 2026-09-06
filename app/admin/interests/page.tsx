@@ -51,7 +51,7 @@ export default function InterestsPage() {
                   <tr key={row.id}>
                     <td>
                       {row.userName}
-                      <div style={{ color: "#94a3b8", fontSize: "0.78rem" }}>{row.mobile} · {row.email}</div>
+                      <div className="ap-muted">{row.mobile} · {row.email}</div>
                     </td>
                     <td>{row.serviceTitle}</td>
                     <td>{row.message || "—"}</td>

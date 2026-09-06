@@ -1,6 +1,13 @@
 import { getApiUrl } from "./site";
 import type { Role } from "./roles";
 
+export type UploadFile = {
+  name: string;
+  label: string;
+  field?: string;
+  ref?: string;
+};
+
 export type User = {
   id: string;
   userCode: string;
@@ -15,6 +22,7 @@ export type User = {
   emailVerified?: boolean;
   invitedBy?: string;
   createdAt?: string | null;
+  files?: UploadFile[];
 };
 
 export type Application = {
@@ -32,7 +40,7 @@ export type Application = {
   address?: string;
   message?: string;
   utr?: string;
-  files?: string[];
+  files?: UploadFile[];
   userId?: string;
   partnerId?: string;
   partnerCode?: string;

@@ -57,7 +57,7 @@ export default function AdminHome() {
 function Kpi({ label, value, icon }: { label: string; value: number; icon: string }) {
   return (
     <div className="ap-card">
-      <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(56,189,248,0.12)", color: "#7dd3fc", display: "grid", placeItems: "center", marginBottom: 12 }}>
+      <div style={{ width: 40, height: 40, borderRadius: 12, background: "#e0f2fe", color: "#0369a1", display: "grid", placeItems: "center", marginBottom: 12 }}>
         <i className={`fa-solid ${icon}`}></i>
       </div>
       <div className="ap-label">{label}</div>

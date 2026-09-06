@@ -83,11 +83,11 @@ function StaffLoginInner() {
           </button>
         </form>
         <div style={{ textAlign: "center", marginTop: 18, fontSize: "0.82rem" }}>
-          <Link href="/forgot-password" style={{ color: "#7dd3fc" }}>
+          <Link href="/forgot-password" style={{ color: "#0d6efd" }}>
             Forgot password
           </Link>
           {" · "}
-          <Link href="/" style={{ color: "#7dd3fc" }}>
+          <Link href="/" style={{ color: "#0d6efd" }}>
             Back to website
           </Link>
         </div>

@@ -5,8 +5,8 @@ import { AdminModal } from "@/components/AdminModal";
 import { AdminShell } from "@/components/AdminShell";
 import { LottieMark } from "@/components/LottieMark";
 import { useAuth } from "@/lib/auth";
+import { AdminFiles } from "@/components/AdminFiles";
 import { api, type Application } from "@/lib/api";
-import { getApiUrl } from "@/lib/site";
 
 type Draft = {
   status: Application["status"];
@@ -40,12 +40,6 @@ function draftFromApp(a: Application): Draft {
     partnerRole: a.partnerRole || "",
     utr: a.utr || "",
   };
-}
-
-function fileHref(name: string) {
-  if (!name) return "";
-  if (name.startsWith("http://") || name.startsWith("https://")) return name;
-  return `${getApiUrl()}/uploads/${encodeURIComponent(name)}`;
 }
 
 export default function AdminEnquiriesPage() {
@@ -177,6 +171,7 @@ export default function AdminEnquiriesPage() {
                   <th>Service</th>
                   <th>Customer</th>
                   <th>Details</th>
+                  <th>Files</th>
                   <th>Partner</th>
                   <th>Status</th>
                   <th></th>
@@ -186,24 +181,27 @@ export default function AdminEnquiriesPage() {
                 {filtered.map((a) => (
                   <tr key={a.id}>
                     <td>
-                      <div style={{ fontFamily: "monospace", color: "#7dd3fc" }}>{a.ref}</div>
-                      <div style={{ color: "#94a3b8", fontSize: "0.75rem" }}>
+                      <div className="ap-ref">{a.ref}</div>
+                      <div className="ap-muted">
                         {a.createdAt ? new Date(a.createdAt).toLocaleString() : ""}
                       </div>
                     </td>
                     <td>
                       {a.title}
-                      <div style={{ color: "#94a3b8", fontSize: "0.75rem" }}>{a.type}{a.amount != null ? ` · ${a.amount}` : ""}</div>
+                      <div className="ap-muted">{a.type}{a.amount != null ? ` · ${a.amount}` : ""}</div>
                     </td>
                     <td>
                       <strong>{a.customerName}</strong>
-                      <div style={{ color: "#94a3b8", fontSize: "0.75rem" }}>{a.mobile}</div>
-                      <div style={{ color: "#94a3b8", fontSize: "0.75rem" }}>{a.email || "—"}</div>
+                      <div className="ap-muted">{a.mobile}</div>
+                      <div className="ap-muted">{a.email || "—"}</div>
                     </td>
                     <td style={{ maxWidth: 240 }}>
                       <div>{a.address || "—"}</div>
-                      {a.utr ? <div style={{ color: "#94a3b8", fontSize: "0.75rem" }}>UTR {a.utr}</div> : null}
-                      {a.message ? <div style={{ color: "#94a3b8", fontSize: "0.75rem" }}>{a.message}</div> : null}
+                      {a.utr ? <div className="ap-muted">UTR {a.utr}</div> : null}
+                      {a.message ? <div className="ap-muted">{a.message}</div> : null}
+                    </td>
+                    <td>
+                      <AdminFiles files={a.files} empty="—" />
                     </td>
                     <td>{a.partnerCode || "—"}</td>
                     <td>
@@ -302,18 +300,10 @@ export default function AdminEnquiriesPage() {
               Message
               <textarea className="ap-textarea" rows={3} value={draft.message} onChange={(e) => setDraft({ ...draft, message: e.target.value })} />
             </label>
-            {editing.files && editing.files.length > 0 ? (
-              <div>
-                <div className="ap-label">Files</div>
-                <ul className="ap-files">
-                  {editing.files.map((file) => (
-                    <li key={file}>
-                      <a href={fileHref(file)} target="_blank" rel="noreferrer">{file}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
+            <div>
+              <div className="ap-label">Uploaded files</div>
+              <AdminFiles files={editing.files} />
+            </div>
             <div className="ap-actions">
               <button className="ap-btn" disabled={saving}>{saving ? "Saving..." : "Save application"}</button>
               <button type="button" className="ap-btn ghost" onClick={() => { setEditing(null); setDraft(null); }}>Cancel</button>
