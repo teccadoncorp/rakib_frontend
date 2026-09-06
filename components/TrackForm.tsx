@@ -79,7 +79,7 @@ export function TrackForm({ initialRef = "" }: { initialRef?: string }) {
                 Ref: <span style={{ fontFamily: "monospace", color: "var(--primary-blue)" }}>{item.ref}</span>
               </p>
               <p style={{ fontSize: "0.85rem", marginTop: 4 }}>
-                Status: <strong style={{ textTransform: "capitalize" }}>{item.status.replace("_", " ")}</strong>
+                Status: <strong style={{ textTransform: "capitalize" }}>{String(item.status || "pending").replace("_", " ")}</strong>
               </p>
               {item.notes ? (
                 <div

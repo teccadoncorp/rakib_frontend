@@ -9,7 +9,8 @@ export function ContactForm() {
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
+    const formEl = e.currentTarget;
+    const form = new FormData(formEl);
     try {
       await api.contact({
         name: String(form.get("name") || ""),
@@ -20,7 +21,7 @@ export function ContactForm() {
       });
       setStatus("ok");
       setMessage("Thank you. Your message has been received. Our team will contact you shortly.");
-      e.currentTarget.reset();
+      formEl.reset();
     } catch (err) {
       setStatus("err");
       setMessage(err instanceof Error ? err.message : "Unable to send message right now.");

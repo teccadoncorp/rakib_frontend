@@ -15,17 +15,19 @@ export function PublicServiceEnquiry({ service }: { service: Service }) {
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const formEl = e.currentTarget;
     setSaving(true);
     setError("");
     setSuccess("");
-    const form = new FormData(e.currentTarget);
+    const form = new FormData(formEl);
     form.set("service_slug", service.slug);
     try {
       const res = await api.publicEnquiry(form);
+      const ref = res.application?.ref || "";
       setSuccess(
-        `${settings.enquirySuccess} Your reference ID is ${res.application.ref}. Use it on the Track Status page.`
+        `${settings.enquirySuccess || "Your enquiry has been submitted successfully."} ${ref ? `Your reference ID is ${ref}. Use it on the Track Status page.` : ""}`.trim()
       );
-      e.currentTarget.reset();
+      formEl.reset();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to submit this enquiry.");
     } finally {
@@ -91,17 +93,17 @@ export function PublicServiceEnquiry({ service }: { service: Service }) {
             placeholder={`Tell us what you need for ${service.title}. Example: new application, correction, documents you already have.`}
           />
         </div>
-        {service.documents.map((doc) => (
+        {(service.documents || []).map((doc) => (
           <div className="form-group" key={doc.name}>
             <label className="form-label">
               {doc.name} {doc.required ? <span style={{ color: "red" }}>*</span> : <span className="ap-muted">(optional)</span>}
             </label>
             <input
               type="file"
-              name={`doc_${doc.name.replace(/\s+/g, "_").toLowerCase()}`}
+              name={`doc_${String(doc.name || "file").replace(/\s+/g, "_").toLowerCase()}`}
               className="form-control"
-              required={doc.required}
-              accept={doc.allowed.split(",").map((ext) => `.${ext.trim()}`).join(",")}
+              required={Boolean(doc.required)}
+              accept={(doc.allowed || "pdf,jpg,jpeg,png").split(",").map((ext) => `.${ext.trim()}`).join(",")}
             />
             <div style={{ fontSize: "0.75rem", color: "var(--slate-500)", marginTop: 4 }}>{doc.hint || doc.formats}</div>
           </div>

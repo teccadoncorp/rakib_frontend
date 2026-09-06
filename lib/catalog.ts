@@ -3,30 +3,12 @@ import { SERVICES, type Service, type ServiceDoc } from "./data";
 import { withSite, type SiteInfo } from "./site";
 
 export function settingsFromApi(partial?: Partial<PortalSettings> | null): SiteInfo {
-  return withSite({
-    name: partial?.name,
-    tagline: partial?.tagline,
-    phone: partial?.phone,
-    email: partial?.email,
-    whatsapp: partial?.whatsapp,
-    address: partial?.address,
-    hours: partial?.hours,
-    upiId: partial?.upiId,
-    payeeName: partial?.payeeName,
-    copyright: partial?.copyright,
-    mapEmbed: partial?.mapEmbed,
-    about: partial?.about,
-    heroTitle: partial?.heroTitle,
-    heroSubtitle: partial?.heroSubtitle,
-    heroCta1: partial?.heroCta1,
-    heroCta2: partial?.heroCta2,
-    qrNote: partial?.qrNote,
-    enquirySuccess: partial?.enquirySuccess,
-    statClients: partial?.statClients,
-    statCompleted: partial?.statCompleted,
-    statExperience: partial?.statExperience,
-    roleSelection: partial?.roleSelection,
-  });
+  const next: Partial<PortalSettings> = {};
+  if (!partial) return withSite();
+  for (const [key, value] of Object.entries(partial)) {
+    if (value != null && value !== "") next[key as keyof PortalSettings] = value;
+  }
+  return withSite(next);
 }
 
 export function toCatalogService(service: Service, index = 0): CatalogService {

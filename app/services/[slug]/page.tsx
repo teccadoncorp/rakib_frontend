@@ -79,13 +79,13 @@ export default async function ServiceDetailsPage({ params }: Props) {
                     <i className="fa-solid fa-file-shield" style={{ color: "var(--primary-blue)", marginRight: 8 }}></i> Required Documents
                   </h2>
                 </div>
-                {service.documents.length === 0 ? (
+                {(service.documents || []).length === 0 ? (
                   <p style={{ color: "var(--slate-500)", fontSize: "0.9rem" }}>
                     No specific document uploads required for this service. Simply fill customer details on application.
                   </p>
                 ) : (
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {service.documents.map((doc) => (
+                    {(service.documents || []).map((doc) => (
                       <div key={doc.name} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", background: "#f8fafc", border: "1px solid var(--border-light)", borderRadius: 12, flexWrap: "wrap", gap: 10 }}>
                         <div>
                           <strong style={{ fontSize: "0.95rem", color: "var(--navy-deep)" }}>{doc.name}</strong>
