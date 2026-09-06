@@ -65,7 +65,7 @@ SMTP_FROM="Digital Service <noreply@localhost>"
 
 | Role | Portal | Login | Password | Partner ID |
 | --- | --- | --- | --- | --- |
-| Admin | `/admin/login` | `admin` or `admin@example.com` | `admin123` | `ADM-0001` |
+| Admin | `/admin/login` | `admin`, `admin@example.com`, or `7872292614` | env `ADMIN_PASSWORD` (local seed uses that value) | `ADM-0001` |
 | Superior | `/admin/login` | `superior@example.com` | `super123` | `SUP-DEMO01` |
 | Distributor | `/user-login` and `/admin/login` | `dist@example.com` | `dist123` | `DST-DEMO01` |
 | Retailer | `/user-login` and `/admin/login` | `retail@example.com` | `retail123` | `RTL-DEMO01` |
