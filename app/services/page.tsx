@@ -1,0 +1,78 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { SERVICES } from "@/lib/data";
+import { MoreServicesCard, ServiceCard } from "@/components/ServiceCard";
+
+export const metadata: Metadata = {
+  title: "Our Digital Services",
+};
+
+export default function ServicesPage() {
+  return (
+    <>
+      <section className="page-banner">
+        <div className="container">
+          <h1>Our Digital Services</h1>
+          <p>Fast, reliable, and affordable compliance & banking services for individuals and business owners.</p>
+        </div>
+      </section>
+
+      <section style={{ background: "linear-gradient(135deg, #071938, #0d6efd)", padding: "30px 0", color: "#fff" }}>
+        <div
+          className="container"
+          style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 20 }}
+        >
+          <div>
+            <span
+              style={{
+                background: "rgba(255,255,255,0.2)",
+                padding: "4px 12px",
+                borderRadius: 20,
+                fontSize: "0.8rem",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              <i className="fa-solid fa-id-card"></i> Dedicated Portal
+            </span>
+            <h2 style={{ fontSize: "1.6rem", color: "#ffffff", margin: "8px 0 4px" }}>
+              HD PVC Plastic Card Printing Portal
+            </h2>
+            <p style={{ color: "#cbd5e1", fontSize: "0.95rem", margin: 0 }}>
+              Order single or bulk multiple Aadhaar, Voter, Ration, PAN, and Health Cards on waterproof plastic PVC.
+            </p>
+          </div>
+          <div>
+            <Link
+              href="/pvc-print"
+              className="btn btn-primary"
+              style={{
+                background: "#ffffff",
+                color: "var(--primary-blue)",
+                fontWeight: 800,
+                fontSize: "1rem",
+                padding: "12px 24px",
+                borderRadius: 12,
+                boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
+              }}
+            >
+              Order PVC Cards Now <i className="fa-solid fa-arrow-right"></i>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="section" style={{ background: "#ffffff" }}>
+        <div className="container">
+          <div className="services-grid-6col">
+            {SERVICES.map((service) => (
+              <ServiceCard key={service.slug} service={service} showTime />
+            ))}
+            <MoreServicesCard variant="catalog" />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
