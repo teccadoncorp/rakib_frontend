@@ -72,21 +72,21 @@ export default async function AboutPage() {
                   <div style={{ fontSize: "1.2rem", color: "var(--primary-blue)", marginBottom: 4 }}>
                     <i className="fa-solid fa-users"></i>
                   </div>
-                  <div className="stat-num-value">500+</div>
+                  <div className="stat-num-value">{settings.statClients}</div>
                   <div className="stat-text-label">Happy Clients</div>
                 </div>
                 <div className="stat-box-item">
                   <div style={{ fontSize: "1.2rem", color: "var(--primary-blue)", marginBottom: 4 }}>
                     <i className="fa-solid fa-file-circle-check"></i>
                   </div>
-                  <div className="stat-num-value">1000+</div>
+                  <div className="stat-num-value">{settings.statCompleted}</div>
                   <div className="stat-text-label">Services Completed</div>
                 </div>
                 <div className="stat-box-item">
                   <div style={{ fontSize: "1.2rem", color: "var(--primary-blue)", marginBottom: 4 }}>
                     <i className="fa-solid fa-award"></i>
                   </div>
-                  <div className="stat-num-value">5+ Years</div>
+                  <div className="stat-num-value">{settings.statExperience}</div>
                   <div className="stat-text-label">of Experience</div>
                 </div>
               </div>

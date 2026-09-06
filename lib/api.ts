@@ -103,6 +103,16 @@ export type PortalSettings = {
   about: string;
   copyright: string;
   mapEmbed: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  heroCta1: string;
+  heroCta2: string;
+  qrNote: string;
+  enquirySuccess: string;
+  statClients: string;
+  statCompleted: string;
+  statExperience: string;
+  roleSelection: string;
 };
 
 export type CatalogService = {
@@ -128,6 +138,10 @@ export type CatalogService = {
   requiresPartner: boolean;
   active: boolean;
   sortOrder: number;
+  retailerFee?: number | null;
+  distributorFee?: number | null;
+  priceDisplayType?: string;
+  roleOption?: string;
 };
 
 function networkError(err: unknown) {

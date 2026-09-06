@@ -36,7 +36,9 @@ function ApplyInner() {
   const [interestOk, setInterestOk] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const needsPartner = serviceRequiresPartner(service.slug, service.requiresPartner);
+  const needsPartner =
+    settings.roleSelection !== "off" &&
+    (settings.roleSelection === "mandatory" || serviceRequiresPartner(service.slug, service.requiresPartner));
   const staffPartner = isStaffRole(user?.role) || isPartnerRole(user?.role);
 
   useEffect(() => {
@@ -76,7 +78,7 @@ function ApplyInner() {
     form.set("partner_code", partner?.partnerCode || partnerCode);
     try {
       const res = await api.submitApplication(token, form);
-      setSuccess(`Application submitted. Your reference ID is ${res.application.ref}`);
+      setSuccess(`${settings.enquirySuccess} Reference ID: ${res.application.ref}`);
       setError("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to submit application.");
@@ -305,6 +307,7 @@ function ApplyInner() {
                   </button>
                 </div>
 
+                {settings.qrNote ? <p style={{ fontSize: "0.92rem", color: "var(--slate-600)", marginBottom: 16 }}>{settings.qrNote}</p> : null}
                 <div style={{ background: "linear-gradient(135deg, #f0f7ff, #e0f2fe)", border: "2px solid #38bdf8", borderRadius: 16, padding: 24, marginBottom: 24 }}>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20, alignItems: "flex-start" }}>
                     <div style={{ background: "#ffffff", border: "1px solid #cbd5e1", borderRadius: 14, padding: 14, textAlign: "center", boxShadow: "0 4px 12px rgba(0,0,0,0.06)", width: "100%", boxSizing: "border-box" }}>

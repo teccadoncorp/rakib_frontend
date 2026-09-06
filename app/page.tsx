@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { MoreServicesCard, ServiceCard } from "@/components/ServiceCard";
 import { loadPublicServices, loadPublicSettings } from "@/lib/catalog";
 import { canonical, pageMeta } from "@/lib/seo";
+import { heroTitleParts } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,7 @@ export const metadata: Metadata = pageMeta({
 
 export default async function HomePage() {
   const [services, settings] = await Promise.all([loadPublicServices(), loadPublicSettings()]);
+  const hero = heroTitleParts(settings.heroTitle);
   return (
     <>
       <JsonLd
@@ -36,18 +38,16 @@ export default async function HomePage() {
         <div className="container hero-grid">
           <div className="hero-content">
             <h1 className="hero-title">
-              Digital Services Made <span>Simple</span>
+              {hero.lead}{hero.tail ? <> <span>{hero.tail}</span></> : null}
             </h1>
-            <p className="hero-subtitle">
-              Fast, reliable and convenient digital banking, tax, GST and business registration services from one place.
-            </p>
+            <p className="hero-subtitle">{settings.heroSubtitle}</p>
             <div className="hero-ctas">
               <a href="#services" className="btn btn-primary">
-                <span>Explore Services</span>
+                <span>{settings.heroCta1}</span>
                 <i className="fa-solid fa-arrow-right"></i>
               </a>
               <Link href="/apply" className="btn btn-outline">
-                <span>Send Enquiry</span>
+                <span>{settings.heroCta2}</span>
                 <i className="fa-solid fa-paper-plane"></i>
               </Link>
             </div>
@@ -170,9 +170,9 @@ export default async function HomePage() {
                 {settings.about}
               </p>
               <div className="about-stats-grid">
-                <Stat icon="fa-users" value="500+" label="Happy Clients" />
-                <Stat icon="fa-file-circle-check" value="1000+" label="Services Completed" />
-                <Stat icon="fa-award" value="5+ Years" label="of Experience" />
+                <Stat icon="fa-users" value={settings.statClients} label="Happy Clients" />
+                <Stat icon="fa-file-circle-check" value={settings.statCompleted} label="Services Completed" />
+                <Stat icon="fa-award" value={settings.statExperience} label="of Experience" />
               </div>
             </div>
           </div>

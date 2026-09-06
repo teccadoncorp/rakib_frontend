@@ -24,6 +24,10 @@ type Draft = {
   requiresPartner: boolean;
   active: boolean;
   sortOrder: string;
+  retailerFee: string;
+  distributorFee: string;
+  priceDisplayType: string;
+  roleOption: string;
   documents: ServiceDoc[];
 };
 
@@ -43,6 +47,10 @@ function draftFrom(service?: CatalogService | null): Draft {
     requiresPartner: Boolean(service?.requiresPartner),
     active: service ? service.active !== false : true,
     sortOrder: String(service?.sortOrder ?? 0),
+    retailerFee: service?.retailerFee == null ? "" : String(service.retailerFee),
+    distributorFee: service?.distributorFee == null ? "" : String(service.distributorFee),
+    priceDisplayType: service?.priceDisplayType || (service?.price == null ? "contact" : "starting"),
+    roleOption: service?.roleOption || (service?.requiresPartner ? "both" : "hidden"),
     documents: service?.documents?.length ? service.documents.map((doc) => ({ ...doc })) : [],
   };
 }
@@ -110,6 +118,10 @@ export default function AdminServicesPage() {
       requiresPartner: draft.requiresPartner,
       active: draft.active,
       sortOrder: Number(draft.sortOrder || 0),
+      retailerFee: draft.retailerFee,
+      distributorFee: draft.distributorFee,
+      priceDisplayType: draft.priceDisplayType,
+      roleOption: draft.roleOption,
       documents: draft.documents.filter((doc) => doc.name.trim()),
     };
   }
@@ -258,6 +270,29 @@ export default function AdminServicesPage() {
               <label>
                 Sort order
                 <input className="ap-input" value={editing.sortOrder} onChange={(e) => setEditing({ ...editing, sortOrder: e.target.value })} />
+              </label>
+              <label>
+                Retailer fee (INR)
+                <input className="ap-input" inputMode="decimal" value={editing.retailerFee} onChange={(e) => setEditing({ ...editing, retailerFee: e.target.value })} />
+              </label>
+              <label>
+                Distributor fee (INR)
+                <input className="ap-input" inputMode="decimal" value={editing.distributorFee} onChange={(e) => setEditing({ ...editing, distributorFee: e.target.value })} />
+              </label>
+              <label>
+                Price display
+                <select className="ap-select" value={editing.priceDisplayType} onChange={(e) => setEditing({ ...editing, priceDisplayType: e.target.value })}>
+                  <option value="contact">Contact for Price</option>
+                  <option value="starting">Starting At</option>
+                  <option value="fixed">Fixed Price</option>
+                </select>
+              </label>
+              <label>
+                Role selection
+                <select className="ap-select" value={editing.roleOption} onChange={(e) => setEditing({ ...editing, roleOption: e.target.value })}>
+                  <option value="both">Both retailer & distributor</option>
+                  <option value="hidden">Hide role selection</option>
+                </select>
               </label>
             </div>
             <label>

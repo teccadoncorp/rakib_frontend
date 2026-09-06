@@ -141,19 +141,28 @@ export default function AdminEnquiriesPage() {
       {error ? <p style={{ color: "#f87171" }}>{error}</p> : null}
       {ok ? <p style={{ color: "#34d399" }}>{ok}</p> : null}
 
-      <div className="ap-card" style={{ marginBottom: 16, display: "flex", gap: 10, flexWrap: "wrap" }}>
-        <input className="ap-input" style={{ maxWidth: 280 }} placeholder="Search ref, customer, mobile, UTR" value={q} onChange={(e) => setQ(e.target.value)} />
-        <select className="ap-select" style={{ maxWidth: 180 }} value={type} onChange={(e) => setType(e.target.value)}>
+      <div className="ap-card" style={{ marginBottom: 16, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+        {([
+          ["", "All"],
+          ["pending", "New / Pending"],
+          ["in_progress", "Processing"],
+          ["completed", "Completed"],
+          ["rejected", "Rejected"],
+        ] as const).map(([value, label]) => (
+          <button
+            key={value || "all"}
+            type="button"
+            className={status === value ? "ap-btn" : "ap-btn ghost"}
+            onClick={() => setStatus(value)}
+          >
+            {label}
+          </button>
+        ))}
+        <input className="ap-input" style={{ maxWidth: 260 }} placeholder="Search ref, customer, mobile, UTR" value={q} onChange={(e) => setQ(e.target.value)} />
+        <select className="ap-select" style={{ maxWidth: 160 }} value={type} onChange={(e) => setType(e.target.value)}>
           <option value="">All types</option>
           <option value="service">Service</option>
           <option value="pvc">PVC</option>
-        </select>
-        <select className="ap-select" style={{ maxWidth: 200 }} value={status} onChange={(e) => setStatus(e.target.value)}>
-          <option value="">All statuses</option>
-          <option value="pending">pending</option>
-          <option value="in_progress">in progress</option>
-          <option value="completed">completed</option>
-          <option value="rejected">rejected</option>
         </select>
         <span className="ap-chip">{filtered.length} shown</span>
       </div>
@@ -198,6 +207,14 @@ export default function AdminEnquiriesPage() {
                       <strong>{a.customerName}</strong>
                       <div className="ap-muted">{a.mobile}</div>
                       <div className="ap-muted">{a.email || "—"}</div>
+                      {a.mobile ? (
+                        <div className="ap-actions" style={{ marginTop: 6 }}>
+                          <a className="ap-btn ghost" href={`https://wa.me/91${String(a.mobile).replace(/\D/g, "").slice(-10)}`} target="_blank" rel="noreferrer">
+                            WhatsApp
+                          </a>
+                          <a className="ap-btn ghost" href={`tel:${a.mobile}`}>Call</a>
+                        </div>
+                      ) : null}
                     </td>
                     <td style={{ maxWidth: 240 }}>
                       <div>{a.address || "—"}</div>

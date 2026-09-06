@@ -16,6 +16,16 @@ export function settingsFromApi(partial?: Partial<PortalSettings> | null): SiteI
     copyright: partial?.copyright,
     mapEmbed: partial?.mapEmbed,
     about: partial?.about,
+    heroTitle: partial?.heroTitle,
+    heroSubtitle: partial?.heroSubtitle,
+    heroCta1: partial?.heroCta1,
+    heroCta2: partial?.heroCta2,
+    qrNote: partial?.qrNote,
+    enquirySuccess: partial?.enquirySuccess,
+    statClients: partial?.statClients,
+    statCompleted: partial?.statCompleted,
+    statExperience: partial?.statExperience,
+    roleSelection: partial?.roleSelection,
   });
 }
 
@@ -36,6 +46,10 @@ export function toCatalogService(service: Service, index = 0): CatalogService {
     requiresPartner: Boolean(service.requiresPartner),
     active: service.active !== false,
     sortOrder: Number(service.sortOrder || index + 1),
+    retailerFee: service.price ?? null,
+    distributorFee: service.price ?? null,
+    priceDisplayType: service.price == null ? "contact" : "starting",
+    roleOption: service.requiresPartner ? "both" : "hidden",
   };
 }
 

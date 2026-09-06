@@ -16,6 +16,18 @@ export const SITE = {
   copyright: "© 2024 Digital Service. All Rights Reserved.",
   mapEmbed:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14777.625488102434!2d88.423912!3d22.186638!2m3!1f0!0!f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02422c54b299e5%3A0x6b77226f328f2ab!2sJaynagar%2C%20West%20Bengal%20743337!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin",
+  heroTitle: "Digital Services Made Simple",
+  heroSubtitle:
+    "Fast, reliable and convenient digital banking, tax, GST and business registration services from one place.",
+  heroCta1: "Explore Services",
+  heroCta2: "Send Enquiry",
+  qrNote: "Pay the service charge with GPay, PhonePe or Paytm, then upload the payment screenshot.",
+  enquirySuccess:
+    "Your enquiry has been submitted successfully. Our team will verify your details and contact you shortly.",
+  statClients: "500+",
+  statCompleted: "1000+",
+  statExperience: "5+ Years",
+  roleSelection: "on",
 };
 
 function stripSlash(url: string) {
@@ -38,7 +50,8 @@ export type SiteInfo = typeof SITE;
 
 export function withSite(partial?: Partial<SiteInfo> | null): SiteInfo {
   const phone = String(partial?.phone || SITE.phone).trim() || SITE.phone;
-  const whatsapp = String(partial?.whatsapp || SITE.whatsapp).trim() || SITE.whatsapp;
+  const rawWhatsapp = String(partial?.whatsapp || SITE.whatsapp).trim() || SITE.whatsapp;
+  const whatsapp = /^\d{10}$/.test(rawWhatsapp) ? `91${rawWhatsapp}` : rawWhatsapp;
   return {
     ...SITE,
     ...partial,
@@ -63,6 +76,12 @@ export function mailHref(site: SiteInfo = SITE) {
 export function waHref(text?: string, site: SiteInfo = SITE) {
   const base = `https://wa.me/${site.whatsapp}`;
   return text ? `${base}?text=${encodeURIComponent(text)}` : base;
+}
+
+export function heroTitleParts(title: string) {
+  const words = String(title || SITE.heroTitle).trim().split(/\s+/);
+  if (words.length < 2) return { lead: title, tail: "" };
+  return { lead: words.slice(0, -1).join(" "), tail: words[words.length - 1] };
 }
 
 export function upiQrUrl(amount?: number | null, site: SiteInfo = SITE) {
