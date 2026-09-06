@@ -26,14 +26,19 @@ function StaffLoginInner() {
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!username.trim() || !password) {
+    const form = new FormData(e.currentTarget);
+    const nextUser = String(form.get("username") || username).trim();
+    const nextPass = String(form.get("password") || password);
+    if (!nextUser || !nextPass) {
       setError("Please enter username and password.");
       return;
     }
+    setUsername(nextUser);
+    setPassword(nextPass);
     setLoading(true);
     setError("");
     try {
-      await adminLogin(username.trim(), password);
+      await adminLogin(nextUser, nextPass);
       router.push("/admin");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Invalid username or password.");
@@ -62,6 +67,7 @@ function StaffLoginInner() {
             <label className="ap-label">Email, mobile or username</label>
             <input
               className="ap-input"
+              name="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               autoComplete="username"
@@ -73,6 +79,7 @@ function StaffLoginInner() {
             <input
               className="ap-input"
               type="password"
+              name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
