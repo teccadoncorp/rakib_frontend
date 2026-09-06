@@ -16,8 +16,21 @@ export const SITE = {
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14777.625488102434!2d88.423912!3d22.186638!2m3!1f0!0!f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02422c54b299e5%3A0x6b77226f328f2ab!2sJaynagar%2C%20West%20Bengal%20743337!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin",
 };
 
-export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:43124";
+function stripSlash(url: string) {
+  return url.replace(/\/$/, "");
+}
+
+export function configuredApiUrl() {
+  return stripSlash(process.env.NEXT_PUBLIC_API_URL || "");
+}
+
+/** Same-origin in the browser so phones never call 127.0.0.1. */
+export function getApiUrl() {
+  if (typeof window !== "undefined") return "";
+  return configuredApiUrl() || "http://127.0.0.1:43124";
+}
+
+export const API_URL = configuredApiUrl() || "http://127.0.0.1:43124";
 
 export function telHref() {
   return `tel:${SITE.phone}`;

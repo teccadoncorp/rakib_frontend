@@ -1,4 +1,4 @@
-import { API_URL } from "./site";
+import { getApiUrl } from "./site";
 import type { Role } from "./roles";
 
 export type User = {
@@ -91,22 +91,36 @@ export type PortalSettings = {
   payeeName: string;
 };
 
+function networkError(err: unknown) {
+  if (err instanceof TypeError && /fetch|network|load/i.test(err.message)) {
+    return new Error(
+      "Cannot reach the server from this device. Use the live site (not a saved file), stay on HTTPS, and try again."
+    );
+  }
+  return err instanceof Error ? err : new Error("Request failed");
+}
+
 async function request<T>(
   path: string,
   options: RequestInit & { token?: string | null } = {}
 ): Promise<T> {
   const { token, headers, ...rest } = options;
-  const res = await fetch(`${API_URL}${path}`, {
-    ...rest,
-    headers: {
-      ...(rest.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...headers,
-    },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${getApiUrl()}${path}`, {
+      ...rest,
+      headers: {
+        ...(rest.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...headers,
+      },
+    });
+  } catch (err) {
+    throw networkError(err);
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(data.message || "Request failed");
+    throw new Error((data as { message?: string }).message || "Request failed");
   }
   return data as T;
 }

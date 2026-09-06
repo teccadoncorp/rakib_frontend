@@ -33,6 +33,7 @@ const phpAliases: Record<string, string> = {
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
   async rewrites() {
     return Object.entries(phpAliases).map(([source, destination]) => ({
       source,

@@ -96,7 +96,11 @@ The Worker name is `rakib-frontend` (`wrangler.jsonc`). Set these in the Cloudfl
 - **Deploy command:** `npx wrangler deploy`
 - **Root:** repo root (not `server/`)
 
-Set `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_SITE_URL` as Cloudflare environment variables.
+Set `NEXT_PUBLIC_API_URL` (or `API_PROXY_URL`) and `NEXT_PUBLIC_SITE_URL` as Cloudflare environment variables.
+
+The staff panel talks to `/api` on the same website, then Next.js proxies to the Express backend. Phones must not call `127.0.0.1` — that address is the phone itself and shows **Failed to fetch**.
+
+On Railway, set `FRONTEND_URL` / `ALLOWED_ORIGINS` to the live site (`https://sruniquecreation.in` and the `www` host if you use it).
 
 ## Stack
 

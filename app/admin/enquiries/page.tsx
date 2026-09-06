@@ -6,7 +6,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { LottieMark } from "@/components/LottieMark";
 import { useAuth } from "@/lib/auth";
 import { api, type Application } from "@/lib/api";
-import { API_URL } from "@/lib/site";
+import { getApiUrl } from "@/lib/site";
 
 type Draft = {
   status: Application["status"];
@@ -45,7 +45,7 @@ function draftFromApp(a: Application): Draft {
 function fileHref(name: string) {
   if (!name) return "";
   if (name.startsWith("http://") || name.startsWith("https://")) return name;
-  return `${API_URL}/uploads/${encodeURIComponent(name)}`;
+  return `${getApiUrl()}/uploads/${encodeURIComponent(name)}`;
 }
 
 export default function AdminEnquiriesPage() {
