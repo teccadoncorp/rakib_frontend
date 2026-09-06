@@ -224,6 +224,11 @@ export const api = {
   publicServices: () => request<{ services: CatalogService[] }>("/api/services"),
   publicService: (slug: string) =>
     request<{ service: CatalogService }>(`/api/services/${encodeURIComponent(slug)}`),
+  publicEnquiry: (form: FormData) =>
+    request<{ application: Application }>("/api/public-enquiries", {
+      method: "POST",
+      body: form,
+    }),
   contact: (payload: Record<string, string>) =>
     request<{ ok: boolean }>("/api/contact", {
       method: "POST",

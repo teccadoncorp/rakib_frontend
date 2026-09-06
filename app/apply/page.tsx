@@ -43,8 +43,13 @@ function ApplyInner() {
 
   useEffect(() => {
     if (!ready) return;
-    if (!user) router.replace(`/user-login?redirect=/apply?service=${slug}`);
-  }, [ready, user, router, slug]);
+    if (user) return;
+    if (!serviceRequiresPartner(slug, service.requiresPartner)) {
+      router.replace(`/services/${slug}`);
+      return;
+    }
+    router.replace(`/user-login?redirect=/apply?service=${slug}`);
+  }, [ready, user, router, slug, service.requiresPartner]);
 
   if (!ready || !user) return null;
 

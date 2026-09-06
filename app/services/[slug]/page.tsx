@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/JsonLd";
+import { PublicServiceEnquiry } from "@/components/PublicServiceEnquiry";
 import { SERVICES } from "@/lib/data";
 import { loadPublicService } from "@/lib/catalog";
+import { serviceRequiresPartner } from "@/lib/roles";
 import { breadcrumbJsonLd, pageMeta, serviceJsonLd } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -31,6 +33,7 @@ export default async function ServiceDetailsPage({ params }: Props) {
   const { slug } = await params;
   const service = await loadPublicService(slug);
   if (!service) notFound();
+  const gated = serviceRequiresPartner(service.slug, service.requiresPartner);
 
   return (
     <>
@@ -105,11 +108,19 @@ export default async function ServiceDetailsPage({ params }: Props) {
                   <i className="fa-solid fa-list-ol" style={{ color: "var(--primary-blue)", marginRight: 8 }}></i> How to Apply
                 </h2>
                 <ol style={{ marginLeft: 20, color: "var(--slate-600)", lineHeight: 1.8, fontSize: "0.95rem" }}>
-                  <li>Click on <strong>&quot;Apply / Send Enquiry&quot;</strong> button.</li>
-                  <li>Fill out your Name, Mobile Number, Email, and Business Address.</li>
-                  <li>Upload the required documents listed above (mandatory documents are marked).</li>
-                  <li>Submit your application to receive a unique <strong>Enquiry Reference ID</strong>.</li>
-                  <li>Share the Enquiry ID on WhatsApp for priority processing.</li>
+                  {gated ? (
+                    <>
+                      <li>Click <strong>Apply / Send Enquiry</strong> and sign in.</li>
+                      <li>Enter a retailer or distributor ID, or show interest.</li>
+                      <li>Upload the required documents and complete UPI payment.</li>
+                    </>
+                  ) : (
+                    <>
+                      <li>Fill the enquiry form on this page — no login needed.</li>
+                      <li>Or tap Call / WhatsApp to talk to our team on the published number.</li>
+                      <li>Keep the enquiry reference ID to track status.</li>
+                    </>
+                  )}
                 </ol>
               </div>
             </div>
@@ -126,12 +137,20 @@ export default async function ServiceDetailsPage({ params }: Props) {
                 <div style={{ fontSize: "0.85rem", color: "var(--slate-500)", marginBottom: 24 }}>
                   <i className="fa-solid fa-clock" style={{ color: "var(--primary-blue)" }}></i> Processing Time: <strong>{service.processingTime}</strong>
                 </div>
-                <Link href={`/apply?service=${service.slug}`} className="btn btn-primary" style={{ width: "100%", padding: 14, fontSize: "1rem" }}>
-                  Apply / Send Enquiry <i className="fa-solid fa-paper-plane"></i>
-                </Link>
-                <div style={{ marginTop: 16, fontSize: "0.8rem", color: "var(--slate-500)" }}>
-                  <i className="fa-solid fa-lock" style={{ color: "var(--mint-accent)" }}></i> Secure document submission &amp; fast support.
-                </div>
+                {gated ? (
+                  <>
+                    <Link href={`/apply?service=${service.slug}`} className="btn btn-primary" style={{ width: "100%", padding: 14, fontSize: "1rem" }}>
+                      Apply / Send Enquiry <i className="fa-solid fa-paper-plane"></i>
+                    </Link>
+                    <div style={{ marginTop: 16, fontSize: "0.8rem", color: "var(--slate-500)" }}>
+                      <i className="fa-solid fa-lock" style={{ color: "var(--mint-accent)" }}></i> Sign in required for this partner service.
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ textAlign: "left" }}>
+                    <PublicServiceEnquiry service={service} />
+                  </div>
+                )}
               </div>
             </aside>
           </div>

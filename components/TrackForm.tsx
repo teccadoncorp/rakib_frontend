@@ -81,6 +81,28 @@ export function TrackForm({ initialRef = "" }: { initialRef?: string }) {
               <p style={{ fontSize: "0.85rem", marginTop: 4 }}>
                 Status: <strong style={{ textTransform: "capitalize" }}>{item.status.replace("_", " ")}</strong>
               </p>
+              {item.notes ? (
+                <div
+                  style={{
+                    marginTop: 12,
+                    padding: 12,
+                    borderRadius: 12,
+                    background: "#eff6ff",
+                    border: "1px solid #bfdbfe",
+                  }}
+                >
+                  <div style={{ fontSize: "0.72rem", fontWeight: 800, color: "#1d4ed8", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                    Admin remarks
+                  </div>
+                  <p style={{ fontSize: "0.9rem", color: "var(--navy-deep)", margin: "6px 0 0", whiteSpace: "pre-wrap" }}>
+                    {item.notes}
+                  </p>
+                </div>
+              ) : (
+                <p style={{ fontSize: "0.82rem", color: "var(--slate-500)", marginTop: 8 }}>
+                  No admin remarks yet. Check again after our team reviews this file.
+                </p>
+              )}
             </article>
           ))}
         </div>

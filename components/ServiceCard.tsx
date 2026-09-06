@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Service } from "@/lib/data";
+import { serviceRequiresPartner } from "@/lib/roles";
 
 export function ServiceCard({
   service,
@@ -41,7 +42,11 @@ export function ServiceCard({
         }}
       >
         <Link
-          href={`/apply?service=${service.slug}`}
+          href={
+            serviceRequiresPartner(service.slug, service.requiresPartner)
+              ? `/apply?service=${service.slug}`
+              : `/services/${service.slug}`
+          }
           className="btn btn-primary btn-sm"
           style={{ width: "100%", fontSize: "0.8rem", padding: "7px 10px" }}
         >
