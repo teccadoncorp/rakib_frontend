@@ -22,7 +22,7 @@ export default function PvcPrintPage() {
           { name: "PVC Cards", path: "/pvc-print" },
         ])}
       />
-      <section className="page-banner" style={{ background: "linear-gradient(135deg, #061833, #0a4f86)", color: "#fff", textAlign: "center", padding: "45px 0 35px" }}>
+      <section className="page-banner" style={{ background: "linear-gradient(135deg, #071938, #0d6efd)", color: "#fff", textAlign: "center", padding: "45px 0 35px" }}>
         <div className="container">
           <div
             style={{

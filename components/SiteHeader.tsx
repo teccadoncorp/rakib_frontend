@@ -59,7 +59,11 @@ export function SiteHeader() {
                   <Link
                     href={item.href}
                     className={`nav-link${isActive(item.href) ? " active" : ""}`}
-                    style={item.highlight ? { fontWeight: 700 } : undefined}
+                    style={
+                      item.highlight
+                        ? { color: "var(--primary-blue)", fontWeight: 700 }
+                        : undefined
+                    }
                   >
                     {item.icon ? (
                       <i
@@ -79,7 +83,7 @@ export function SiteHeader() {
                   <Link
                     href="/user-dashboard"
                     className={`nav-link${isActive("/user-dashboard") ? " active" : ""}`}
-                    style={{ color: "var(--primary-blue)", fontWeight: 700 }}
+                    style={{ color: "#10b981", fontWeight: 700 }}
                   >
                     <i className="fa-solid fa-circle-user"></i> My Account
                   </Link>
@@ -90,7 +94,7 @@ export function SiteHeader() {
                   <Link
                     href="/admin"
                     className="nav-link"
-                    style={{ color: "var(--primary-blue)", fontWeight: 700 }}
+                    style={{ color: "#38bdf8", fontWeight: 700 }}
                   >
                     <i className="fa-solid fa-shield-halved"></i> Staff Portal
                   </Link>
@@ -119,6 +123,8 @@ export function SiteHeader() {
                   href="/user-dashboard"
                   className="btn btn-primary"
                   style={{
+                    background: "#10b981",
+                    border: "none",
                     fontSize: "0.82rem",
                     padding: "6px 12px",
                   }}
@@ -136,9 +142,16 @@ export function SiteHeader() {
                   <i className="fa-solid fa-right-to-bracket"></i>
                 </Link>
               ) : null}
-              <Link href="/apply" className="btn btn-primary desktop-pvc-btn">
-                <span>Get Started</span>
-                <i className="fa-solid fa-arrow-right"></i>
+              <Link
+                href="/pvc-print"
+                className="btn btn-primary desktop-pvc-btn"
+                style={{
+                  background: "linear-gradient(135deg, #0d6efd, #0369a1)",
+                  border: "none",
+                }}
+              >
+                <span>PVC Print</span>
+                <i className="fa-solid fa-id-card"></i>
               </Link>
             </div>
 
@@ -172,15 +185,13 @@ export function SiteHeader() {
           <div className="logo">
             <img
               src="/assets/images/logo.png"
-              alt="Uniqueue DigiTech"
+              alt="Digital Service Logo"
               style={{
-                height: 42,
+                height: 48,
                 width: "auto",
-                maxWidth: 200,
                 background: "#ffffff",
                 padding: "4px 8px",
                 borderRadius: 8,
-                objectFit: "contain",
                 display: "block",
               }}
             />
@@ -231,7 +242,7 @@ export function SiteHeader() {
               href="/user-dashboard"
               className="btn btn-primary"
               onClick={close}
-              style={{ width: "100%", marginBottom: 8 }}
+              style={{ width: "100%", background: "#10b981", border: "none", marginBottom: 8 }}
             >
               My Account Portal <i className="fa-solid fa-circle-user"></i>
             </Link>

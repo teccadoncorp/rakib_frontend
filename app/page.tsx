@@ -5,6 +5,7 @@ import { MoreServicesCard, ServiceCard } from "@/components/ServiceCard";
 import { loadPublicServices, loadPublicSettings } from "@/lib/catalog";
 import { LANDING_SERVICE_SLUGS, SERVICES, type Service } from "@/lib/data";
 import { canonical, pageMeta } from "@/lib/seo";
+import { heroTitleParts } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,7 @@ export default async function HomePage() {
   const featured = LANDING_SERVICE_SLUGS.map(
     (slug) => services.find((item) => item.slug === slug) || SERVICES.find((item) => item.slug === slug)
   ).filter((item): item is Service => Boolean(item));
+  const hero = heroTitleParts(settings.heroTitle);
   return (
     <>
       <JsonLd
@@ -37,41 +39,94 @@ export default async function HomePage() {
         }}
       />
       <section className="hero">
-        <div className="hero-wave" aria-hidden="true"></div>
         <div className="container hero-grid">
           <div className="hero-content">
-            <div className="hero-brand-lockup">
-              <img src="/assets/images/logo.png" alt="Uniqueue DigiTech" />
-              <p className="hero-kicker">Building digital excellence</p>
-            </div>
             <h1 className="hero-title">
-              Smart Solutions for a <span>Digital Tomorrow</span>
+              {hero.lead}{hero.tail ? <> <span>{hero.tail}</span></> : null}
             </h1>
-            <p className="hero-subtitle">Fastest. Reliable. Secure. Always with You.</p>
-            <div className="hero-inline-features">
-              <span><i className="fa-solid fa-shield-halved"></i> Secure &amp; Reliable</span>
-              <span><i className="fa-solid fa-gauge-high"></i> Fast Processing</span>
-              <span><i className="fa-solid fa-users"></i> Customer Focused</span>
-              <span><i className="fa-solid fa-headset"></i> 24/7 Support</span>
+            <p className="hero-subtitle">{settings.heroSubtitle}</p>
+            <div className="hero-ctas">
+              <a href="#services" className="btn btn-primary">
+                <span>{settings.heroCta1}</span>
+                <i className="fa-solid fa-arrow-right"></i>
+              </a>
+              <Link href="/apply" className="btn btn-outline">
+                <span>{settings.heroCta2}</span>
+                <i className="fa-solid fa-paper-plane"></i>
+              </Link>
+            </div>
+            <div className="hero-badges">
+              <div className="badge-item">
+                <div className="badge-icon">
+                  <i className="fa-solid fa-shield-halved"></i>
+                </div>
+                <span>Secure Process</span>
+              </div>
+              <div className="badge-item">
+                <div className="badge-icon">
+                  <i className="fa-solid fa-lock"></i>
+                </div>
+                <span>100% Confidential</span>
+              </div>
+              <div className="badge-item">
+                <div className="badge-icon">
+                  <i className="fa-solid fa-headset"></i>
+                </div>
+                <span>Quick Support</span>
+              </div>
             </div>
           </div>
 
-          <div className="hero-stage">
-            <div className="hero-net" aria-hidden="true">
-              <i className="fa-solid fa-shield-halved"></i>
-              <i className="fa-solid fa-id-card"></i>
-              <i className="fa-solid fa-file-lines"></i>
-              <i className="fa-solid fa-cloud"></i>
-              <i className="fa-solid fa-globe"></i>
+          <div className="hero-visual-wrapper">
+            <div className="floating-circle-icon" style={{ top: 20, left: 10 }}>
+              <i className="fa-solid fa-building-columns" style={{ color: "#0d6efd" }}></i>
             </div>
-            <svg className="hero-plant" viewBox="0 0 54 68" fill="none" aria-hidden="true">
-              <rect x="18" y="42" width="18" height="18" rx="4" fill="#1677ff" />
-              <path d="M27 42 C18 30 12 22 16 12 C22 20 26 28 27 42 Z" fill="#22c55e" />
-              <path d="M27 42 C36 28 44 20 40 10 C33 18 29 28 27 42 Z" fill="#16a34a" />
+            <div className="floating-circle-icon" style={{ top: 60, right: 20 }}>
+              <i className="fa-solid fa-indian-rupee-sign" style={{ color: "#f59e0b" }}></i>
+            </div>
+            <div className="floating-circle-icon" style={{ bottom: 80, left: 20 }}>
+              <i className="fa-solid fa-file-shield" style={{ color: "#10b981" }}></i>
+            </div>
+
+            <div className="phone-mockup-frame">
+              <div className="phone-top-bar">
+                <i className="fa-solid fa-building-columns"></i> Digital Service
+              </div>
+              <div className="phone-items-list">
+                <PhoneRow icon="fa-fingerprint" title="AEPS" sub="Balance Enquiry" />
+                <PhoneRow icon="fa-mobile-screen-button" title="Mobile Recharge" sub="Prepaid / DTH" />
+                <PhoneRow icon="fa-id-card" title="PAN Card" sub="Apply Portal" />
+                <PhoneRow icon="fa-file-invoice" title="GST Services" sub="Registration & Return" />
+                <PhoneRow icon="fa-calculator" title="Tax Filing" sub="Income Tax" />
+              </div>
+            </div>
+
+            <svg className="hero-illustration-person" viewBox="0 0 300 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M70 240 C70 170 120 160 160 160 C200 160 250 170 250 240 L260 400 L60 400 Z" fill="#0d6efd" />
+              <path d="M125 160 L160 210 L195 160 Z" fill="#ffffff" opacity="0.9" />
+              <path d="M120 160 L160 185 L135 190 Z" fill="#0056b3" />
+              <path d="M200 160 L160 185 L185 190 Z" fill="#0056b3" />
+              <rect x="142" y="125" width="36" height="40" rx="10" fill="#f5c29b" />
+              <ellipse cx="160" cy="100" rx="42" ry="48" fill="#f5c29b" />
+              <path d="M118 90 C118 50 150 45 160 45 C180 45 202 50 202 90 C195 70 180 60 160 60 C140 60 125 70 118 90 Z" fill="#1e293b" />
+              <path d="M125 105 C125 135 140 145 160 145 C180 145 195 135 195 105 C185 130 175 135 160 135 C145 135 135 130 125 105 Z" fill="#1e293b" opacity="0.9" />
+              <circle cx="145" cy="92" r="3.5" fill="#1e293b" />
+              <circle cx="175" cy="92" r="3.5" fill="#1e293b" />
+              <path d="M148 112 Q160 122 172 112" stroke="#1e293b" strokeWidth="3" strokeLinecap="round" fill="none" />
+              <path d="M60 280 Q100 250 135 280" stroke="#f5c29b" strokeWidth="20" strokeLinecap="round" fill="none" />
+              <rect x="120" y="250" width="50" height="90" rx="10" fill="#0f172a" />
+              <rect x="124" y="254" width="42" height="82" rx="6" fill="#38bdf8" />
             </svg>
-            <div className="hero-mug" aria-hidden="true"></div>
-            <img className="hero-laptop" src="/assets/images/hero-laptop.png" alt="Digital services dashboard on a laptop" />
-            <img className="hero-phone" src="/assets/images/hero-phone.png" alt="Digital services app on a mobile phone" />
+
+            <div className="hero-trusted-pill">
+              <div className="trusted-icon">
+                <i className="fa-solid fa-circle-check"></i>
+              </div>
+              <div>
+                <div style={{ fontWeight: 800, fontSize: "0.85rem", color: "var(--navy-deep)" }}>Your Trusted</div>
+                <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--primary-blue)" }}>Digital Partner</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -91,6 +146,17 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <div className="container">
+        <div className="value-bar-container">
+          <div className="value-grid-4col">
+            <ValueBox icon="fa-bolt" title="Fast & Reliable" text="Quick processing and timely delivery" />
+            <ValueBox icon="fa-shield-halved" title="Secure & Safe" text="100% secure process and data protection" />
+            <ValueBox icon="fa-headset" title="Expert Support" text="Professional guidance at every step" />
+            <ValueBox icon="fa-hand-holding-dollar" title="Affordable Price" text="Best services at reasonable cost" />
+          </div>
+        </div>
+      </div>
 
       <section className="section" style={{ background: "#ffffff" }}>
         <div className="container">
@@ -154,10 +220,10 @@ export default async function HomePage() {
             </h2>
           </div>
           <div className="testimonial-wrapper">
-            <div style={{ fontSize: "3rem", color: "var(--primary-blue)", position: "absolute", left: 0, top: 0, fontFamily: "serif", lineHeight: 1 }}>
+            <div style={{ fontSize: "3rem", color: "#10b981", position: "absolute", left: 0, top: 0, fontFamily: "serif", lineHeight: 1 }}>
               “
             </div>
-            <div style={{ fontSize: "3rem", color: "var(--primary-blue)", position: "absolute", right: 0, bottom: 0, fontFamily: "serif", lineHeight: 1 }}>
+            <div style={{ fontSize: "3rem", color: "#10b981", position: "absolute", right: 0, bottom: 0, fontFamily: "serif", lineHeight: 1 }}>
               ”
             </div>
             <div className="testimonial-avatar-box">
@@ -185,6 +251,34 @@ export default async function HomePage() {
         </div>
       </section>
     </>
+  );
+}
+
+function PhoneRow({ icon, title, sub }: { icon: string; title: string; sub: string }) {
+  return (
+    <div className="phone-service-row">
+      <div className="phone-service-icon">
+        <i className={`fa-solid ${icon}`}></i>
+      </div>
+      <div className="phone-service-info">
+        <h5>{title}</h5>
+        <p>{sub}</p>
+      </div>
+    </div>
+  );
+}
+
+function ValueBox({ icon, title, text }: { icon: string; title: string; text: string }) {
+  return (
+    <div className="value-box">
+      <div className="value-circle-icon">
+        <i className={`fa-solid ${icon}`}></i>
+      </div>
+      <div className="value-info">
+        <h4>{title}</h4>
+        <p>{text}</p>
+      </div>
+    </div>
   );
 }
 
@@ -260,13 +354,13 @@ export function WhyChooseUs() {
 export function BankSvg() {
   return (
     <svg width="220" height="150" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 50 L100 15 L180 50 Z" fill="#061833" />
-      <rect x="30" y="55" width="140" height="10" fill="#0a4f86" />
-      <rect x="40" y="65" width="16" height="55" fill="#00c2ff" />
-      <rect x="75" y="65" width="16" height="55" fill="#00c2ff" />
-      <rect x="110" y="65" width="16" height="55" fill="#00c2ff" />
-      <rect x="145" y="65" width="16" height="55" fill="#00c2ff" />
-      <rect x="25" y="120" width="150" height="12" fill="#061833" />
+      <path d="M20 50 L100 15 L180 50 Z" fill="#0d6efd" />
+      <rect x="30" y="55" width="140" height="10" fill="#0056b3" />
+      <rect x="40" y="65" width="16" height="55" fill="#38bdf8" />
+      <rect x="75" y="65" width="16" height="55" fill="#38bdf8" />
+      <rect x="110" y="65" width="16" height="55" fill="#38bdf8" />
+      <rect x="145" y="65" width="16" height="55" fill="#38bdf8" />
+      <rect x="25" y="120" width="150" height="12" fill="#0d6efd" />
       <circle cx="165" cy="95" r="10" fill="#f5c29b" />
       <path d="M150 120 C150 108 180 108 180 120 Z" fill="#0f172a" />
       <rect x="145" y="112" width="22" height="12" rx="2" fill="#94a3b8" />

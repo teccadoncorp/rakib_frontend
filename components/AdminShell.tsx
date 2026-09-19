@@ -48,7 +48,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     <div className="ap-root">
       <aside className={`ap-aside${open ? " open" : ""}`}>
         <div className="ap-brand">
-          <img src="/assets/images/logo.png" alt="Uniqueue DigiTech" />
+          <img src="/assets/images/logo.png" alt="Digital Service" />
           <div>
             <span>Control room</span>
             <strong>Digital Service</strong>

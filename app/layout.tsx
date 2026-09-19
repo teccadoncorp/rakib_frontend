@@ -7,7 +7,7 @@ import { SITE } from "@/lib/site";
 import "./globals.css";
 
 export const viewport: Viewport = {
-  themeColor: "#061833",
+  themeColor: "#0d6efd",
   width: "device-width",
   initialScale: 1,
 };
