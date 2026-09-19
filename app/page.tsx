@@ -5,7 +5,6 @@ import { MoreServicesCard, ServiceCard } from "@/components/ServiceCard";
 import { loadPublicServices, loadPublicSettings } from "@/lib/catalog";
 import { LANDING_SERVICE_SLUGS, SERVICES, type Service } from "@/lib/data";
 import { canonical, pageMeta } from "@/lib/seo";
-import { heroTitleParts } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +21,6 @@ export default async function HomePage() {
   const featured = LANDING_SERVICE_SLUGS.map(
     (slug) => services.find((item) => item.slug === slug) || SERVICES.find((item) => item.slug === slug)
   ).filter((item): item is Service => Boolean(item));
-  const hero = heroTitleParts(settings.heroTitle);
   return (
     <>
       <JsonLd
@@ -39,44 +37,41 @@ export default async function HomePage() {
         }}
       />
       <section className="hero">
+        <div className="hero-wave" aria-hidden="true"></div>
         <div className="container hero-grid">
           <div className="hero-content">
-            <p className="hero-kicker">Your local digital partner</p>
+            <div className="hero-brand-lockup">
+              <img src="/assets/images/logo.png" alt="Uniqueue DigiTech" />
+              <p className="hero-kicker">Building digital excellence</p>
+            </div>
             <h1 className="hero-title">
-              {hero.lead}{hero.tail ? <> <span>{hero.tail}</span></> : null}
+              Smart Solutions for a <span>Digital Tomorrow</span>
             </h1>
-            <p className="hero-subtitle">{settings.heroSubtitle}</p>
-            <div className="hero-ctas">
-              <a href="#services" className="btn btn-primary">
-                <span>{settings.heroCta1}</span>
-                <i className="fa-solid fa-arrow-right"></i>
-              </a>
-              <Link href="/apply" className="btn btn-ghost">
-                <span>{settings.heroCta2}</span>
-              </Link>
+            <p className="hero-subtitle">Fastest. Reliable. Secure. Always with You.</p>
+            <div className="hero-inline-features">
+              <span><i className="fa-solid fa-shield-halved"></i> Secure &amp; Reliable</span>
+              <span><i className="fa-solid fa-gauge-high"></i> Fast Processing</span>
+              <span><i className="fa-solid fa-users"></i> Customer Focused</span>
+              <span><i className="fa-solid fa-headset"></i> 24/7 Support</span>
             </div>
           </div>
 
-          <div className="hero-visual-wrapper">
-            <div className="hero-prop cup" aria-hidden="true">
-              <i className="fa-solid fa-leaf" style={{ color: "#16a34a", fontSize: "1.1rem", display: "grid", placeItems: "center", height: "100%" }}></i>
+          <div className="hero-stage">
+            <div className="hero-net" aria-hidden="true">
+              <i className="fa-solid fa-shield-halved"></i>
+              <i className="fa-solid fa-id-card"></i>
+              <i className="fa-solid fa-file-lines"></i>
+              <i className="fa-solid fa-cloud"></i>
+              <i className="fa-solid fa-globe"></i>
             </div>
-            <div className="hero-prop mug" aria-hidden="true"></div>
-            <LaptopMockup />
-          </div>
-        </div>
-      </section>
-
-      <section className="hero-features">
-        <div className="container">
-          <div className="hero-features-panel">
-            <div className="hero-features-grid">
-              <HeroFeature icon="fa-gauge-high" title="Fast Processing" text="Quick filing and timely delivery for every service." />
-              <HeroFeature icon="fa-shield-halved" title="Secure & Reliable" text="Your data stays confidential with a safe process." />
-              <HeroFeature icon="fa-headset" title="24/7 Support" text="We are here to help you at every step." />
-              <HeroFeature icon="fa-hand-holding-dollar" title="Affordable Price" text="Best digital services at a reasonable cost." />
-              <HeroFeature icon="fa-handshake" title="Trusted Partner" text="Local support from Jaynagar for your success." />
-            </div>
+            <svg className="hero-plant" viewBox="0 0 54 68" fill="none" aria-hidden="true">
+              <rect x="18" y="42" width="18" height="18" rx="4" fill="#1677ff" />
+              <path d="M27 42 C18 30 12 22 16 12 C22 20 26 28 27 42 Z" fill="#22c55e" />
+              <path d="M27 42 C36 28 44 20 40 10 C33 18 29 28 27 42 Z" fill="#16a34a" />
+            </svg>
+            <div className="hero-mug" aria-hidden="true"></div>
+            <img className="hero-laptop" src="/assets/images/hero-laptop.png" alt="Digital services dashboard on a laptop" />
+            <img className="hero-phone" src="/assets/images/hero-phone.png" alt="Digital services app on a mobile phone" />
           </div>
         </div>
       </section>
@@ -190,73 +185,6 @@ export default async function HomePage() {
         </div>
       </section>
     </>
-  );
-}
-
-function HeroFeature({ icon, title, text }: { icon: string; title: string; text: string }) {
-  return (
-    <div className="hero-feature">
-      <div className="hero-feature-icon">
-        <i className={`fa-solid ${icon}`}></i>
-      </div>
-      <h4>{title}</h4>
-      <p>{text}</p>
-    </div>
-  );
-}
-
-function LaptopMockup() {
-  return (
-    <div className="laptop-mockup">
-      <div className="laptop-screen">
-        <div className="laptop-chrome">
-          <div className="laptop-dots">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <span>Digital Service Dashboard</span>
-          <span style={{ color: "#00c2ff" }}>Live</span>
-        </div>
-        <div className="laptop-body">
-          <div className="dash-stats">
-            <div className="dash-stat">
-              <strong>500+</strong>
-              <span>Happy clients</span>
-            </div>
-            <div className="dash-stat">
-              <strong>1000+</strong>
-              <span>Services done</span>
-            </div>
-            <div className="dash-stat">
-              <strong>5+ yrs</strong>
-              <span>Local experience</span>
-            </div>
-          </div>
-          <div className="phone-items-list">
-            <PhoneRow icon="fa-id-card" title="PAN & Aadhaar" sub="Apply / update portal" />
-            <PhoneRow icon="fa-file-invoice" title="GST Services" sub="Registration & return" />
-            <PhoneRow icon="fa-calculator" title="Income Tax" sub="ITR filing support" />
-            <PhoneRow icon="fa-certificate" title="Licences" sub="Trade, FSSAI, ISO" />
-          </div>
-        </div>
-      </div>
-      <div className="laptop-base"></div>
-    </div>
-  );
-}
-
-function PhoneRow({ icon, title, sub }: { icon: string; title: string; sub: string }) {
-  return (
-    <div className="phone-service-row">
-      <div className="phone-service-icon">
-        <i className={`fa-solid ${icon}`}></i>
-      </div>
-      <div className="phone-service-info">
-        <h5>{title}</h5>
-        <p>{sub}</p>
-      </div>
-    </div>
   );
 }
 
