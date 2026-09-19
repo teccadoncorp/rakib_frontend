@@ -587,9 +587,32 @@ img {
   transition: var(--transition);
 }
 
+.service-image-wrapper {
+  width: 100%;
+  height: 108px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  background: #f8fafc;
+  border: 1px solid #eef2f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .service-card-item:hover .service-icon-wrapper {
   background: var(--primary-blue);
   color: #ffffff;
+}
+
+.service-card-item:hover .service-image-wrapper {
+  border-color: rgba(13, 110, 253, 0.25);
 }
 
 .service-card-title {

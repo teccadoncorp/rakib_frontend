@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, KeyboardEvent, useEffect, useMemo, useState } from "react";
 import { AdminModal } from "@/components/AdminModal";
 import { AdminShell } from "@/components/AdminShell";
 import { LottieMark } from "@/components/LottieMark";
@@ -51,7 +51,12 @@ function draftFrom(service?: CatalogService | null): Draft {
     distributorFee: service?.distributorFee == null ? "" : String(service.distributorFee),
     priceDisplayType: service?.priceDisplayType || (service?.price == null ? "contact" : "starting"),
     roleOption: service?.roleOption || (service?.requiresPartner ? "both" : "hidden"),
-    documents: service?.documents?.length ? service.documents.map((doc) => ({ ...doc })) : [],
+    documents: service?.documents?.length
+      ? service.documents.map((doc, index) => ({
+          ...doc,
+          uid: doc.uid || `doc-${service.id || "new"}-${index}`,
+        }))
+      : [],
   };
 }
 
@@ -122,7 +127,9 @@ export default function AdminServicesPage() {
       distributorFee: draft.distributorFee,
       priceDisplayType: draft.priceDisplayType,
       roleOption: draft.roleOption,
-      documents: draft.documents.filter((doc) => doc.name.trim()),
+      documents: draft.documents
+        .filter((doc) => doc.name.trim())
+        .map(({ uid, ...doc }) => doc),
     };
   }
 
@@ -162,9 +169,13 @@ export default function AdminServicesPage() {
   }
 
   function updateDoc(index: number, patch: Partial<ServiceDoc>) {
-    if (!editing) return;
-    const documents = editing.documents.map((doc, i) => (i === index ? { ...doc, ...patch } : doc));
-    setEditing({ ...editing, documents });
+    setEditing((current) => {
+      if (!current) return current;
+      return {
+        ...current,
+        documents: current.documents.map((doc, i) => (i === index ? { ...doc, ...patch } : doc)),
+      };
+    });
   }
 
   return (
@@ -324,43 +335,18 @@ export default function AdminServicesPage() {
               ) : (
                 <div style={{ display: "grid", gap: 12, marginTop: 10 }}>
                   {editing.documents.map((doc, index) => (
-                    <div key={`${doc.name}-${index}`} className="ap-card" style={{ padding: 14 }}>
-                      <div className="ap-form-grid">
-                        <label>
-                          Document name
-                          <input className="ap-input" value={doc.name} onChange={(e) => updateDoc(index, { name: e.target.value })} />
-                        </label>
-                        <label>
-                          Allowed formats
-                          <input className="ap-input" value={doc.formats} onChange={(e) => updateDoc(index, { formats: e.target.value })} />
-                        </label>
-                        <label>
-                          File extensions
-                          <input className="ap-input" value={doc.allowed} onChange={(e) => updateDoc(index, { allowed: e.target.value })} />
-                        </label>
-                        <label>
-                          Max size (MB)
-                          <input className="ap-input" value={String(doc.maxMb)} onChange={(e) => updateDoc(index, { maxMb: Number(e.target.value) || 5 })} />
-                        </label>
-                      </div>
-                      <label>
-                        Hint for the customer
-                        <input className="ap-input" value={doc.hint} onChange={(e) => updateDoc(index, { hint: e.target.value })} />
-                      </label>
-                      <div className="ap-actions">
-                        <label className="ap-check">
-                          <input type="checkbox" checked={doc.required} onChange={(e) => updateDoc(index, { required: e.target.checked })} />
-                          Mandatory
-                        </label>
-                        <button
-                          type="button"
-                          className="ap-btn danger"
-                          onClick={() => setEditing({ ...editing, documents: editing.documents.filter((_, i) => i !== index) })}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
+                    <DocumentDraft
+                      key={doc.uid || `doc-${index}`}
+                      doc={doc}
+                      onChange={(patch) => updateDoc(index, patch)}
+                      onRemove={() =>
+                        setEditing((current) =>
+                          current
+                            ? { ...current, documents: current.documents.filter((_, i) => i !== index) }
+                            : current
+                        )
+                      }
+                    />
                   ))}
                 </div>
               )}
@@ -374,5 +360,86 @@ export default function AdminServicesPage() {
         </AdminModal>
       ) : null}
     </AdminShell>
+  );
+}
+
+function DocumentDraft({
+  doc,
+  onChange,
+  onRemove,
+}: {
+  doc: ServiceDoc;
+  onChange: (patch: Partial<ServiceDoc>) => void;
+  onRemove: () => void;
+}) {
+  function stopSubmit(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") e.preventDefault();
+  }
+
+  return (
+    <div className="ap-doc-card">
+      <div className="ap-form-grid">
+        <label>
+          Document name
+          <input
+            className="ap-input"
+            autoComplete="off"
+            value={doc.name}
+            onChange={(e) => onChange({ name: e.target.value })}
+            onKeyDown={stopSubmit}
+          />
+        </label>
+        <label>
+          Allowed formats
+          <input
+            className="ap-input"
+            autoComplete="off"
+            value={doc.formats}
+            onChange={(e) => onChange({ formats: e.target.value })}
+            onKeyDown={stopSubmit}
+          />
+        </label>
+        <label>
+          File extensions
+          <input
+            className="ap-input"
+            autoComplete="off"
+            value={doc.allowed}
+            onChange={(e) => onChange({ allowed: e.target.value })}
+            onKeyDown={stopSubmit}
+          />
+        </label>
+        <label>
+          Max size (MB)
+          <input
+            className="ap-input"
+            inputMode="numeric"
+            autoComplete="off"
+            value={String(doc.maxMb)}
+            onChange={(e) => onChange({ maxMb: Number(e.target.value) || 5 })}
+            onKeyDown={stopSubmit}
+          />
+        </label>
+      </div>
+      <label>
+        Hint for the customer
+        <input
+          className="ap-input"
+          autoComplete="off"
+          value={doc.hint}
+          onChange={(e) => onChange({ hint: e.target.value })}
+          onKeyDown={stopSubmit}
+        />
+      </label>
+      <div className="ap-actions">
+        <label className="ap-check">
+          <input type="checkbox" checked={doc.required} onChange={(e) => onChange({ required: e.target.checked })} />
+          Mandatory
+        </label>
+        <button type="button" className="ap-btn danger" onClick={onRemove}>
+          Remove
+        </button>
+      </div>
+    </div>
   );
 }

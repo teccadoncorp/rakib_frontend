@@ -3,6 +3,7 @@ import Link from "next/link";
 import { JsonLd } from "@/components/JsonLd";
 import { MoreServicesCard, ServiceCard } from "@/components/ServiceCard";
 import { loadPublicServices, loadPublicSettings } from "@/lib/catalog";
+import { LANDING_SERVICE_SLUGS, SERVICES, type Service } from "@/lib/data";
 import { canonical, pageMeta } from "@/lib/seo";
 import { heroTitleParts } from "@/lib/site";
 
@@ -18,6 +19,9 @@ export const metadata: Metadata = pageMeta({
 
 export default async function HomePage() {
   const [services, settings] = await Promise.all([loadPublicServices(), loadPublicSettings()]);
+  const featured = LANDING_SERVICE_SLUGS.map(
+    (slug) => services.find((item) => item.slug === slug) || SERVICES.find((item) => item.slug === slug)
+  ).filter((item): item is Service => Boolean(item));
   const hero = heroTitleParts(settings.heroTitle);
   return (
     <>
@@ -135,7 +139,7 @@ export default async function HomePage() {
             </h2>
           </div>
           <div className="services-grid-6col">
-            {services.map((service) => (
+            {featured.map((service) => (
               <ServiceCard key={service.slug} service={service} />
             ))}
             <MoreServicesCard variant="home" />

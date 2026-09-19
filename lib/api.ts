@@ -143,6 +143,7 @@ export type CatalogService = {
   distributorFee?: number | null;
   priceDisplayType?: string;
   roleOption?: string;
+  image?: string;
 };
 
 function networkError(err: unknown) {

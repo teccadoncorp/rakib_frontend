@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Service } from "@/lib/data";
+import { serviceImage, type Service } from "@/lib/data";
 import { serviceRequiresPartner } from "@/lib/roles";
 
 export function ServiceCard({
@@ -9,11 +9,18 @@ export function ServiceCard({
   service: Service;
   showTime?: boolean;
 }) {
+  const image = serviceImage(service.slug, service.image);
   return (
     <div className="service-card-item">
-      <div className="service-icon-wrapper">
-        <i className={`fa-solid ${service.icon}`}></i>
-      </div>
+      {image ? (
+        <div className="service-image-wrapper">
+          <img src={image} alt={service.title} />
+        </div>
+      ) : (
+        <div className="service-icon-wrapper">
+          <i className={`fa-solid ${service.icon}`}></i>
+        </div>
+      )}
       <h3 className="service-card-title">{service.title}</h3>
       <p className="service-card-desc">{service.description}</p>
       {showTime ? (
@@ -83,8 +90,8 @@ export function MoreServicesCard({ variant = "home" }: { variant?: "home" | "cat
           : "Need assistance with custom digital online forms, utility services, or compliance?"}
       </p>
       {variant === "home" ? (
-        <Link href="/contact" className="service-apply-link">
-          <span>Apply Now</span>
+        <Link href="/services" className="service-apply-link">
+          <span>View All</span>
           <i className="fa-solid fa-arrow-right"></i>
         </Link>
       ) : (

@@ -5,6 +5,7 @@ export type ServiceDoc = {
   allowed: string;
   maxMb: number;
   required: boolean;
+  uid?: string;
 };
 
 export type Service = {
@@ -23,7 +24,42 @@ export type Service = {
   requiresPartner?: boolean;
   active?: boolean;
   sortOrder?: number;
+  image?: string;
 };
+
+export const SERVICE_IMAGES: Record<string, string> = {
+  "iso-9001": "/assets/images/services/iso-9001.jpg",
+  "ration-card": "/assets/images/services/ration-card.jpg",
+  "fssai-license": "/assets/images/services/fssai.jpg",
+  "trade-licence": "/assets/images/services/west-bengal.jpg",
+  "gst-registration": "/assets/images/services/gst.jpg",
+  "gst-return": "/assets/images/services/gst.jpg",
+  "gst-maintenance": "/assets/images/services/gst.jpg",
+  "books-of-account": "/assets/images/services/books-of-account.jpg",
+  "income-tax-filing": "/assets/images/services/income-tax.jpg",
+  "income-tax-audit": "/assets/images/services/income-tax.jpg",
+  "aadhaar-card": "/assets/images/services/aadhaar.jpg",
+  aeps: "/assets/images/services/aadhaar.jpg",
+  "pan-card": "/assets/images/services/pan-card.jpg",
+};
+
+export const LANDING_SERVICE_SLUGS = [
+  "iso-9001",
+  "ration-card",
+  "fssai-license",
+  "trade-licence",
+  "gst-registration",
+  "books-of-account",
+  "income-tax-filing",
+  "aadhaar-card",
+  "pan-card",
+] as const;
+
+export function serviceImage(slug?: string | null, image?: string | null) {
+  if (image) return image;
+  if (!slug) return "";
+  return SERVICE_IMAGES[slug] || "";
+}
 
 export type PvcCard = {
   slug: string;
@@ -393,6 +429,174 @@ export const SERVICES: Service[] = [
         allowed: "jpg,jpeg,png",
         maxMb: 5,
         required: true,
+      },
+    ],
+  },
+  {
+    id: 12,
+    slug: "iso-9001",
+    title: "ISO 9001 Certification",
+    description:
+      "End-to-end help for ISO 9001 quality management certification, documentation, and audit readiness.",
+    overview:
+      "We prepare the quality manual, process documents, and application pack so your business can obtain ISO 9001 certification with a recognised certification body.",
+    icon: "fa-award",
+    processingTime: "7-15 Business Days",
+    price: null,
+    priceLabel: "Contact for Quote",
+    priceDisplay: "Contact for Price",
+    documents: [
+      {
+        name: "Aadhaar Card",
+        hint: "Aadhaar Card of proprietor or authorised signatory",
+        formats: "PDF,JPG,JPEG,PNG (Max 5MB)",
+        allowed: "pdf,jpg,jpeg,png",
+        maxMb: 5,
+        required: true,
+      },
+      {
+        name: "PAN Card",
+        hint: "PAN Card of the business or proprietor",
+        formats: "PDF,JPG,JPEG,PNG (Max 5MB)",
+        allowed: "pdf,jpg,jpeg,png",
+        maxMb: 5,
+        required: true,
+      },
+      {
+        name: "Business Proof",
+        hint: "Trade licence, MSME, or GST certificate",
+        formats: "PDF,JPG,JPEG,PNG (Max 10MB)",
+        allowed: "pdf,jpg,jpeg,png",
+        maxMb: 10,
+        required: true,
+      },
+    ],
+  },
+  {
+    id: 13,
+    slug: "ration-card",
+    title: "Ration Card",
+    description:
+      "New ration card application, member addition, correction, and digital ration card support.",
+    overview:
+      "Assistance for West Bengal Food & Supplies ration card applications, corrections, and digital copy downloads with proper document checking before submission.",
+    icon: "fa-wheat-awn",
+    processingTime: "1-3 Days",
+    price: null,
+    priceLabel: "Contact for Quote",
+    priceDisplay: "Contact for Price",
+    documents: [
+      {
+        name: "Aadhaar Card",
+        hint: "Aadhaar Card of all family members",
+        formats: "PDF,JPG,JPEG,PNG (Max 5MB)",
+        allowed: "pdf,jpg,jpeg,png",
+        maxMb: 5,
+        required: true,
+      },
+      {
+        name: "Address Proof",
+        hint: "Electricity bill, rent agreement, or voter ID",
+        formats: "PDF,JPG,JPEG,PNG (Max 5MB)",
+        allowed: "pdf,jpg,jpeg,png",
+        maxMb: 5,
+        required: true,
+      },
+      {
+        name: "Passport Size Photo",
+        hint: "Recent photo of the head of family",
+        formats: "JPG,JPEG,PNG (Max 2MB)",
+        allowed: "jpg,jpeg,png",
+        maxMb: 2,
+        required: true,
+      },
+    ],
+  },
+  {
+    id: 14,
+    slug: "fssai-license",
+    title: "FSSAI License",
+    description:
+      "FSSAI registration and state/central food licence for shops, restaurants, and food manufacturers.",
+    overview:
+      "Complete FSSAI registration and licence filing, including document verification, portal submission, and follow-up until the licence is issued.",
+    icon: "fa-utensils",
+    processingTime: "2-7 Business Days",
+    price: null,
+    priceLabel: "Contact for Quote",
+    priceDisplay: "Contact for Price",
+    documents: [
+      {
+        name: "Aadhaar Card",
+        hint: "Aadhaar Card of food business operator",
+        formats: "PDF,JPG,JPEG,PNG (Max 5MB)",
+        allowed: "pdf,jpg,jpeg,png",
+        maxMb: 5,
+        required: true,
+      },
+      {
+        name: "PAN Card",
+        hint: "PAN Card of proprietor or firm",
+        formats: "PDF,JPG,JPEG,PNG (Max 5MB)",
+        allowed: "pdf,jpg,jpeg,png",
+        maxMb: 5,
+        required: true,
+      },
+      {
+        name: "Business Address Proof",
+        hint: "Rent agreement, trade licence, or electricity bill",
+        formats: "PDF,JPG,JPEG,PNG (Max 5MB)",
+        allowed: "pdf,jpg,jpeg,png",
+        maxMb: 5,
+        required: true,
+      },
+      {
+        name: "Passport Size Photo",
+        hint: "Recent passport size photograph",
+        formats: "JPG,JPEG,PNG (Max 2MB)",
+        allowed: "jpg,jpeg,png",
+        maxMb: 2,
+        required: true,
+      },
+    ],
+  },
+  {
+    id: 15,
+    slug: "aadhaar-card",
+    title: "Aadhaar Card",
+    description:
+      "Aadhaar update, address change, mobile linking, and PVC Aadhaar card printing support.",
+    overview:
+      "Help with Aadhaar demographic updates, document upload, appointment support, and HD PVC Aadhaar card printing after UIDAI confirmation.",
+    icon: "fa-id-card",
+    processingTime: "1-2 Days",
+    price: 70,
+    priceLabel: "Starting ₹70.00",
+    priceDisplay: "Starting ₹70.00",
+    documents: [
+      {
+        name: "Existing Aadhaar",
+        hint: "Aadhaar card or E-Aadhaar PDF",
+        formats: "PDF,JPG,JPEG,PNG (Max 5MB)",
+        allowed: "pdf,jpg,jpeg,png",
+        maxMb: 5,
+        required: true,
+      },
+      {
+        name: "Address / Identity Proof",
+        hint: "Required for update or correction requests",
+        formats: "PDF,JPG,JPEG,PNG (Max 5MB)",
+        allowed: "pdf,jpg,jpeg,png",
+        maxMb: 5,
+        required: false,
+      },
+      {
+        name: "Passport Size Photo",
+        hint: "Recent photo if biometric or photo update is needed",
+        formats: "JPG,JPEG,PNG (Max 2MB)",
+        allowed: "jpg,jpeg,png",
+        maxMb: 2,
+        required: false,
       },
     ],
   },

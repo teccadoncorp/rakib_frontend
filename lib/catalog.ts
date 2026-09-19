@@ -1,5 +1,5 @@
 import { api, type CatalogService, type PortalSettings } from "./api";
-import { SERVICES, type Service, type ServiceDoc } from "./data";
+import { SERVICES, serviceImage, type Service, type ServiceDoc } from "./data";
 import { withSite, type SiteInfo } from "./site";
 
 export function settingsFromApi(partial?: Partial<PortalSettings> | null): SiteInfo {
@@ -32,6 +32,7 @@ export function toCatalogService(service: Service, index = 0): CatalogService {
     distributorFee: service.price ?? null,
     priceDisplayType: service.price == null ? "contact" : "starting",
     roleOption: service.requiresPartner ? "both" : "hidden",
+    image: serviceImage(service.slug, service.image),
   };
 }
 
@@ -45,6 +46,7 @@ export function emptyDoc(): ServiceDoc {
     allowed: "pdf,jpg,jpeg,png",
     maxMb: 5,
     required: true,
+    uid: `doc-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
   };
 }
 
@@ -73,7 +75,17 @@ export function serviceFromApi(raw: CatalogService | Service, index = 0): Servic
     requiresPartner: Boolean(raw.requiresPartner),
     active: raw.active !== false,
     sortOrder: Number(raw.sortOrder || 0),
+    image: serviceImage(raw.slug, "image" in raw ? raw.image : undefined),
   };
+}
+
+export function mergeLocalServices(list: Service[]): Service[] {
+  const have = new Set(list.map((item) => item.slug));
+  const extras = SERVICES.filter((item) => !have.has(item.slug)).map((item) => ({
+    ...item,
+    image: serviceImage(item.slug, item.image),
+  }));
+  return [...list, ...extras];
 }
 
 export async function loadPublicSettings(): Promise<SiteInfo> {
@@ -89,9 +101,9 @@ export async function loadPublicServices(): Promise<Service[]> {
   try {
     const res = await api.publicServices();
     const list = (res.services || []).map(serviceFromApi);
-    return list.length ? list : SERVICES;
+    return mergeLocalServices(list.length ? list : SERVICES);
   } catch {
-    return SERVICES;
+    return mergeLocalServices(SERVICES);
   }
 }
 
@@ -103,5 +115,5 @@ export async function loadPublicService(slug: string): Promise<Service | undefin
     /* fall through */
   }
   const list = await loadPublicServices();
-  return list.find((item) => item.slug === slug);
+  return list.find((item) => item.slug === slug) || SERVICES.find((item) => item.slug === slug);
 }

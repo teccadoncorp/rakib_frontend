@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { api } from "./api";
-import { serviceFromApi, settingsFromApi } from "./catalog";
+import { mergeLocalServices, serviceFromApi, settingsFromApi } from "./catalog";
 import { SERVICES, type Service } from "./data";
 import { type SiteInfo } from "./site";
 
@@ -32,7 +32,7 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
       }
       if (servicesRes.status === "fulfilled") {
         const list = (servicesRes.value.services || []).map(serviceFromApi);
-        if (list.length) setServices(list);
+        if (list.length) setServices(mergeLocalServices(list));
       }
       setReady(true);
     });
