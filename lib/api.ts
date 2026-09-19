@@ -1,3 +1,4 @@
+import type { ServiceDoc } from "./data";
 import { getApiUrl } from "./site";
 import type { Role } from "./roles";
 
@@ -128,14 +129,7 @@ export type CatalogService = {
   price: number | null;
   priceLabel: string;
   priceDisplay: string;
-  documents: {
-    name: string;
-    hint: string;
-    formats: string;
-    allowed: string;
-    maxMb: number;
-    required: boolean;
-  }[];
+  documents: ServiceDoc[];
   requiresPartner: boolean;
   active: boolean;
   sortOrder: number;
