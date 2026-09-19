@@ -32,7 +32,7 @@ export function toCatalogService(service: Service, index = 0): CatalogService {
     distributorFee: service.price ?? null,
     priceDisplayType: service.price == null ? "contact" : "starting",
     roleOption: service.requiresPartner ? "both" : "hidden",
-    image: serviceImage(service.slug, service.image),
+    image: serviceImage(service.slug, service.image, service.title),
   };
 }
 
@@ -75,7 +75,7 @@ export function serviceFromApi(raw: CatalogService | Service, index = 0): Servic
     requiresPartner: Boolean(raw.requiresPartner),
     active: raw.active !== false,
     sortOrder: Number(raw.sortOrder || 0),
-    image: serviceImage(raw.slug, "image" in raw ? raw.image : undefined),
+    image: serviceImage(raw.slug, "image" in raw ? raw.image : undefined, raw.title),
   };
 }
 
@@ -83,7 +83,7 @@ export function mergeLocalServices(list: Service[]): Service[] {
   const have = new Set(list.map((item) => item.slug));
   const extras = SERVICES.filter((item) => !have.has(item.slug)).map((item) => ({
     ...item,
-    image: serviceImage(item.slug, item.image),
+    image: serviceImage(item.slug, item.image, item.title),
   }));
   return [...list, ...extras];
 }

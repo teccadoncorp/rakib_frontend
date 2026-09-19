@@ -9,7 +9,7 @@ export function ServiceCard({
   service: Service;
   showTime?: boolean;
 }) {
-  const image = serviceImage(service.slug, service.image);
+  const image = serviceImage(service.slug, service.image, service.title);
   return (
     <div className="service-card-item">
       {image ? (

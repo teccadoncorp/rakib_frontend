@@ -39,10 +39,17 @@ export const SERVICE_IMAGES: Record<string, string> = {
   "income-tax-audit": "/assets/images/services/income-tax-audit.jpg",
   "msme-registration": "/assets/images/services/msme.jpg",
   "trade-licence": "/assets/images/services/west-bengal.jpg",
-  "iso-9001": "/assets/images/services/iso-9001.jpg",
+  "iso-9001": "/assets/images/services/iso-certificate.jpg",
+  "iso-certificate": "/assets/images/services/iso-certificate.jpg",
   "ration-card": "/assets/images/services/ration-card.jpg",
   "fssai-license": "/assets/images/services/fssai.jpg",
   "aadhaar-card": "/assets/images/services/aadhaar.jpg",
+  "new-pan-card": "/assets/images/services/pan-card.jpg",
+  "new-pan-card-apply": "/assets/images/services/pan-card.jpg",
+  "pan-card-apply": "/assets/images/services/pan-card.jpg",
+  "pan-correction": "/assets/images/services/pan-card.jpg",
+  "correction-pan-card": "/assets/images/services/pan-card.jpg",
+  "correction-pan": "/assets/images/services/pan-card.jpg",
 };
 
 export const LANDING_SERVICE_SLUGS = [
@@ -57,10 +64,24 @@ export const LANDING_SERVICE_SLUGS = [
   "pan-card",
 ] as const;
 
-export function serviceImage(slug?: string | null, image?: string | null) {
+function normalizeKey(value?: string | null) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+export function serviceImage(slug?: string | null, image?: string | null, title?: string | null) {
   if (image) return image;
-  if (!slug) return "";
-  return SERVICE_IMAGES[slug] || "";
+  const key = normalizeKey(slug);
+  if (key && SERVICE_IMAGES[key]) return SERVICE_IMAGES[key];
+  const titleKey = normalizeKey(title);
+  if (titleKey && SERVICE_IMAGES[titleKey]) return SERVICE_IMAGES[titleKey];
+  const hay = `${key} ${titleKey} ${title || ""}`.toLowerCase();
+  if (hay.includes("iso")) return SERVICE_IMAGES["iso-certificate"];
+  if (hay.includes("pan")) return SERVICE_IMAGES["pan-card"];
+  return "";
 }
 
 export type PvcCard = {
