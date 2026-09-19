@@ -66,13 +66,14 @@ export function SiteFooter() {
               <Link href="/" className="logo" style={{ color: "#fff", display: "inline-block" }}>
                 <img
                   src="/assets/images/logo.png"
-                  alt={`${settings.name} logo — Jaynagar digital banking and GST centre`}
-                  width={160}
-                  height={56}
+                  alt="Uniqueue DigiTech"
+                  width={200}
+                  height={48}
                   style={{
-                    height: 56,
+                    height: 48,
                     width: "auto",
-                    maxHeight: 56,
+                    maxHeight: 48,
+                    maxWidth: 220,
                     background: "#ffffff",
                     padding: "6px 12px",
                     borderRadius: 10,

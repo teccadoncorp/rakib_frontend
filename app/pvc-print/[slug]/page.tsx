@@ -46,7 +46,7 @@ export default async function PvcCardPage({ params }: Props) {
           }),
         ]}
       />
-      <section className="page-banner" style={{ background: "linear-gradient(135deg, #071938, #0d6efd)", color: "#fff", padding: "40px 0 30px" }}>
+      <section className="page-banner" style={{ background: "linear-gradient(135deg, #061833, #0a4f86)", color: "#fff", padding: "40px 0 30px" }}>
         <div className="container">
           <Link href="/pvc-print" style={{ color: "#38bdf8", fontSize: "0.88rem", fontWeight: 700, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
             &larr; Back to PVC Cards Catalog

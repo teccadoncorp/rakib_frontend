@@ -40,7 +40,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <section style={{ background: "linear-gradient(135deg, #071938, #0d6efd)", color: "#fff", padding: "40px 0 30px" }}>
+      <section style={{ background: "linear-gradient(135deg, #061833, #0a4f86)", color: "#fff", padding: "40px 0 30px" }}>
         <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 20 }}>
           <div>
             <span

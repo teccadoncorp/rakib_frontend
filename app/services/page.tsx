@@ -31,7 +31,7 @@ export default async function ServicesPage() {
         </div>
       </section>
 
-      <section style={{ background: "linear-gradient(135deg, #071938, #0d6efd)", padding: "30px 0", color: "#fff" }}>
+      <section style={{ background: "linear-gradient(135deg, #061833, #0a4f86)", padding: "30px 0", color: "#fff" }}>
         <div
           className="container"
           style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 20 }}

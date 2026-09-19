@@ -41,6 +41,7 @@ export default async function HomePage() {
       <section className="hero">
         <div className="container hero-grid">
           <div className="hero-content">
+            <p className="hero-kicker">Your local digital partner</p>
             <h1 className="hero-title">
               {hero.lead}{hero.tail ? <> <span>{hero.tail}</span></> : null}
             </h1>
@@ -50,82 +51,31 @@ export default async function HomePage() {
                 <span>{settings.heroCta1}</span>
                 <i className="fa-solid fa-arrow-right"></i>
               </a>
-              <Link href="/apply" className="btn btn-outline">
+              <Link href="/apply" className="btn btn-ghost">
                 <span>{settings.heroCta2}</span>
-                <i className="fa-solid fa-paper-plane"></i>
               </Link>
-            </div>
-            <div className="hero-badges">
-              <div className="badge-item">
-                <div className="badge-icon">
-                  <i className="fa-solid fa-shield-halved"></i>
-                </div>
-                <span>Secure Process</span>
-              </div>
-              <div className="badge-item">
-                <div className="badge-icon">
-                  <i className="fa-solid fa-lock"></i>
-                </div>
-                <span>100% Confidential</span>
-              </div>
-              <div className="badge-item">
-                <div className="badge-icon">
-                  <i className="fa-solid fa-headset"></i>
-                </div>
-                <span>Quick Support</span>
-              </div>
             </div>
           </div>
 
           <div className="hero-visual-wrapper">
-            <div className="floating-circle-icon" style={{ top: 20, left: 10 }}>
-              <i className="fa-solid fa-building-columns" style={{ color: "#0d6efd" }}></i>
+            <div className="hero-prop cup" aria-hidden="true">
+              <i className="fa-solid fa-leaf" style={{ color: "#16a34a", fontSize: "1.1rem", display: "grid", placeItems: "center", height: "100%" }}></i>
             </div>
-            <div className="floating-circle-icon" style={{ top: 60, right: 20 }}>
-              <i className="fa-solid fa-indian-rupee-sign" style={{ color: "#f59e0b" }}></i>
-            </div>
-            <div className="floating-circle-icon" style={{ bottom: 80, left: 20 }}>
-              <i className="fa-solid fa-file-shield" style={{ color: "#10b981" }}></i>
-            </div>
+            <div className="hero-prop mug" aria-hidden="true"></div>
+            <LaptopMockup />
+          </div>
+        </div>
+      </section>
 
-            <div className="phone-mockup-frame">
-              <div className="phone-top-bar">
-                <i className="fa-solid fa-building-columns"></i> Digital Service
-              </div>
-              <div className="phone-items-list">
-                <PhoneRow icon="fa-fingerprint" title="AEPS" sub="Balance Enquiry" />
-                <PhoneRow icon="fa-mobile-screen-button" title="Mobile Recharge" sub="Prepaid / DTH" />
-                <PhoneRow icon="fa-id-card" title="PAN Card" sub="Apply Portal" />
-                <PhoneRow icon="fa-file-invoice" title="GST Services" sub="Registration & Return" />
-                <PhoneRow icon="fa-calculator" title="Tax Filing" sub="Income Tax" />
-              </div>
-            </div>
-
-            <svg className="hero-illustration-person" viewBox="0 0 300 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M70 240 C70 170 120 160 160 160 C200 160 250 170 250 240 L260 400 L60 400 Z" fill="#0d6efd" />
-              <path d="M125 160 L160 210 L195 160 Z" fill="#ffffff" opacity="0.9" />
-              <path d="M120 160 L160 185 L135 190 Z" fill="#0056b3" />
-              <path d="M200 160 L160 185 L185 190 Z" fill="#0056b3" />
-              <rect x="142" y="125" width="36" height="40" rx="10" fill="#f5c29b" />
-              <ellipse cx="160" cy="100" rx="42" ry="48" fill="#f5c29b" />
-              <path d="M118 90 C118 50 150 45 160 45 C180 45 202 50 202 90 C195 70 180 60 160 60 C140 60 125 70 118 90 Z" fill="#1e293b" />
-              <path d="M125 105 C125 135 140 145 160 145 C180 145 195 135 195 105 C185 130 175 135 160 135 C145 135 135 130 125 105 Z" fill="#1e293b" opacity="0.9" />
-              <circle cx="145" cy="92" r="3.5" fill="#1e293b" />
-              <circle cx="175" cy="92" r="3.5" fill="#1e293b" />
-              <path d="M148 112 Q160 122 172 112" stroke="#1e293b" strokeWidth="3" strokeLinecap="round" fill="none" />
-              <path d="M60 280 Q100 250 135 280" stroke="#f5c29b" strokeWidth="20" strokeLinecap="round" fill="none" />
-              <rect x="120" y="250" width="50" height="90" rx="10" fill="#0f172a" />
-              <rect x="124" y="254" width="42" height="82" rx="6" fill="#38bdf8" />
-            </svg>
-
-            <div className="hero-trusted-pill">
-              <div className="trusted-icon">
-                <i className="fa-solid fa-circle-check"></i>
-              </div>
-              <div>
-                <div style={{ fontWeight: 800, fontSize: "0.85rem", color: "var(--navy-deep)" }}>Your Trusted</div>
-                <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--primary-blue)" }}>Digital Partner</div>
-              </div>
+      <section className="hero-features">
+        <div className="container">
+          <div className="hero-features-panel">
+            <div className="hero-features-grid">
+              <HeroFeature icon="fa-gauge-high" title="Fast Processing" text="Quick filing and timely delivery for every service." />
+              <HeroFeature icon="fa-shield-halved" title="Secure & Reliable" text="Your data stays confidential with a safe process." />
+              <HeroFeature icon="fa-headset" title="24/7 Support" text="We are here to help you at every step." />
+              <HeroFeature icon="fa-hand-holding-dollar" title="Affordable Price" text="Best digital services at a reasonable cost." />
+              <HeroFeature icon="fa-handshake" title="Trusted Partner" text="Local support from Jaynagar for your success." />
             </div>
           </div>
         </div>
@@ -146,17 +96,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      <div className="container">
-        <div className="value-bar-container">
-          <div className="value-grid-4col">
-            <ValueBox icon="fa-bolt" title="Fast & Reliable" text="Quick processing and timely delivery" />
-            <ValueBox icon="fa-shield-halved" title="Secure & Safe" text="100% secure process and data protection" />
-            <ValueBox icon="fa-headset" title="Expert Support" text="Professional guidance at every step" />
-            <ValueBox icon="fa-hand-holding-dollar" title="Affordable Price" text="Best services at reasonable cost" />
-          </div>
-        </div>
-      </div>
 
       <section className="section" style={{ background: "#ffffff" }}>
         <div className="container">
@@ -220,10 +159,10 @@ export default async function HomePage() {
             </h2>
           </div>
           <div className="testimonial-wrapper">
-            <div style={{ fontSize: "3rem", color: "#10b981", position: "absolute", left: 0, top: 0, fontFamily: "serif", lineHeight: 1 }}>
+            <div style={{ fontSize: "3rem", color: "var(--primary-blue)", position: "absolute", left: 0, top: 0, fontFamily: "serif", lineHeight: 1 }}>
               “
             </div>
-            <div style={{ fontSize: "3rem", color: "#10b981", position: "absolute", right: 0, bottom: 0, fontFamily: "serif", lineHeight: 1 }}>
+            <div style={{ fontSize: "3rem", color: "var(--primary-blue)", position: "absolute", right: 0, bottom: 0, fontFamily: "serif", lineHeight: 1 }}>
               ”
             </div>
             <div className="testimonial-avatar-box">
@@ -254,6 +193,59 @@ export default async function HomePage() {
   );
 }
 
+function HeroFeature({ icon, title, text }: { icon: string; title: string; text: string }) {
+  return (
+    <div className="hero-feature">
+      <div className="hero-feature-icon">
+        <i className={`fa-solid ${icon}`}></i>
+      </div>
+      <h4>{title}</h4>
+      <p>{text}</p>
+    </div>
+  );
+}
+
+function LaptopMockup() {
+  return (
+    <div className="laptop-mockup">
+      <div className="laptop-screen">
+        <div className="laptop-chrome">
+          <div className="laptop-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span>Digital Service Dashboard</span>
+          <span style={{ color: "#00c2ff" }}>Live</span>
+        </div>
+        <div className="laptop-body">
+          <div className="dash-stats">
+            <div className="dash-stat">
+              <strong>500+</strong>
+              <span>Happy clients</span>
+            </div>
+            <div className="dash-stat">
+              <strong>1000+</strong>
+              <span>Services done</span>
+            </div>
+            <div className="dash-stat">
+              <strong>5+ yrs</strong>
+              <span>Local experience</span>
+            </div>
+          </div>
+          <div className="phone-items-list">
+            <PhoneRow icon="fa-id-card" title="PAN & Aadhaar" sub="Apply / update portal" />
+            <PhoneRow icon="fa-file-invoice" title="GST Services" sub="Registration & return" />
+            <PhoneRow icon="fa-calculator" title="Income Tax" sub="ITR filing support" />
+            <PhoneRow icon="fa-certificate" title="Licences" sub="Trade, FSSAI, ISO" />
+          </div>
+        </div>
+      </div>
+      <div className="laptop-base"></div>
+    </div>
+  );
+}
+
 function PhoneRow({ icon, title, sub }: { icon: string; title: string; sub: string }) {
   return (
     <div className="phone-service-row">
@@ -263,20 +255,6 @@ function PhoneRow({ icon, title, sub }: { icon: string; title: string; sub: stri
       <div className="phone-service-info">
         <h5>{title}</h5>
         <p>{sub}</p>
-      </div>
-    </div>
-  );
-}
-
-function ValueBox({ icon, title, text }: { icon: string; title: string; text: string }) {
-  return (
-    <div className="value-box">
-      <div className="value-circle-icon">
-        <i className={`fa-solid ${icon}`}></i>
-      </div>
-      <div className="value-info">
-        <h4>{title}</h4>
-        <p>{text}</p>
       </div>
     </div>
   );
@@ -354,13 +332,13 @@ export function WhyChooseUs() {
 export function BankSvg() {
   return (
     <svg width="220" height="150" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 50 L100 15 L180 50 Z" fill="#0d6efd" />
-      <rect x="30" y="55" width="140" height="10" fill="#0056b3" />
-      <rect x="40" y="65" width="16" height="55" fill="#38bdf8" />
-      <rect x="75" y="65" width="16" height="55" fill="#38bdf8" />
-      <rect x="110" y="65" width="16" height="55" fill="#38bdf8" />
-      <rect x="145" y="65" width="16" height="55" fill="#38bdf8" />
-      <rect x="25" y="120" width="150" height="12" fill="#0d6efd" />
+      <path d="M20 50 L100 15 L180 50 Z" fill="#061833" />
+      <rect x="30" y="55" width="140" height="10" fill="#0a4f86" />
+      <rect x="40" y="65" width="16" height="55" fill="#00c2ff" />
+      <rect x="75" y="65" width="16" height="55" fill="#00c2ff" />
+      <rect x="110" y="65" width="16" height="55" fill="#00c2ff" />
+      <rect x="145" y="65" width="16" height="55" fill="#00c2ff" />
+      <rect x="25" y="120" width="150" height="12" fill="#061833" />
       <circle cx="165" cy="95" r="10" fill="#f5c29b" />
       <path d="M150 120 C150 108 180 108 180 120 Z" fill="#0f172a" />
       <rect x="145" y="112" width="22" height="12" rx="2" fill="#94a3b8" />
