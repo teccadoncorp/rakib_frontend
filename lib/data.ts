@@ -28,19 +28,21 @@ export type Service = {
 };
 
 export const SERVICE_IMAGES: Record<string, string> = {
+  aeps: "/assets/images/services/aeps.jpg",
+  "mobile-recharge": "/assets/images/services/mobile-recharge.jpg",
+  "pan-card": "/assets/images/services/pan-card.jpg",
+  "gst-registration": "/assets/images/services/gst.jpg",
+  "gst-return": "/assets/images/services/gst-return.jpg",
+  "gst-maintenance": "/assets/images/services/gst-maintenance.jpg",
+  "books-of-account": "/assets/images/services/books-of-account.jpg",
+  "income-tax-filing": "/assets/images/services/income-tax.jpg",
+  "income-tax-audit": "/assets/images/services/income-tax-audit.jpg",
+  "msme-registration": "/assets/images/services/msme.jpg",
+  "trade-licence": "/assets/images/services/west-bengal.jpg",
   "iso-9001": "/assets/images/services/iso-9001.jpg",
   "ration-card": "/assets/images/services/ration-card.jpg",
   "fssai-license": "/assets/images/services/fssai.jpg",
-  "trade-licence": "/assets/images/services/west-bengal.jpg",
-  "gst-registration": "/assets/images/services/gst.jpg",
-  "gst-return": "/assets/images/services/gst.jpg",
-  "gst-maintenance": "/assets/images/services/gst.jpg",
-  "books-of-account": "/assets/images/services/books-of-account.jpg",
-  "income-tax-filing": "/assets/images/services/income-tax.jpg",
-  "income-tax-audit": "/assets/images/services/income-tax.jpg",
   "aadhaar-card": "/assets/images/services/aadhaar.jpg",
-  aeps: "/assets/images/services/aadhaar.jpg",
-  "pan-card": "/assets/images/services/pan-card.jpg",
 };
 
 export const LANDING_SERVICE_SLUGS = [
