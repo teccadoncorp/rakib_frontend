@@ -8,7 +8,7 @@ import { useAuth } from "@/lib/auth";
 import { api, type CatalogService } from "@/lib/api";
 import { emptyDoc, FALLBACK_CATALOG } from "@/lib/catalog";
 import { formatInr, type ServiceDoc } from "@/lib/data";
-import { emptyEnquiryField, normalizeEnquiryFields, resolveFieldName, type EnquiryField, type EnquiryFieldType } from "@/lib/enquiry-fields";
+import { dedupeEnquiryFields, emptyEnquiryField, normalizeEnquiryFields, resolveFieldName, type EnquiryField, type EnquiryFieldType } from "@/lib/enquiry-fields";
 
 type Draft = {
   id?: string;
@@ -133,17 +133,19 @@ export default function AdminServicesPage() {
       documents: draft.documents
         .filter((doc) => doc.name.trim())
         .map(({ uid, ...doc }) => doc),
-      enquiryFields: draft.enquiryFields
-        .filter((field) => field.label.trim())
-        .map((field) => {
-          const name = resolveFieldName(field);
-          return {
-            ...field,
-            name,
-            required: name === "customer_name" || name === "mobile" ? true : field.required,
-            locked: name === "customer_name" || name === "mobile",
-          };
-        }),
+      enquiryFields: dedupeEnquiryFields(
+        draft.enquiryFields
+          .filter((field) => field.label.trim())
+          .map((field) => {
+            const name = resolveFieldName(field);
+            return {
+              ...field,
+              name,
+              required: name === "customer_name" || name === "mobile" ? true : field.required,
+              locked: name === "customer_name" || name === "mobile",
+            };
+          })
+      ),
     };
   }
 
@@ -461,7 +463,11 @@ function FieldDraft({
             onChange={(e) => {
               const label = e.target.value;
               const patch: Partial<EnquiryField> = { label };
-              if (!field.locked) patch.name = resolveFieldName({ label, name: "", locked: false });
+              const previous = resolveFieldName({ label: field.label, name: "", locked: false });
+              const stillFollowingLabel = !field.name || field.name === previous;
+              if (!field.locked && stillFollowingLabel && field.name !== "email" && field.name !== "address" && field.name !== "message") {
+                patch.name = resolveFieldName({ label, name: "", locked: false });
+              }
               onChange(patch);
             }}
             onKeyDown={stopSubmit}

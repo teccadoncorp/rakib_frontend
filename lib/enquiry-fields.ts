@@ -144,7 +144,18 @@ export function normalizeEnquiryFields(raw?: EnquiryField[] | null): EnquiryFiel
 
   const names = new Set(fields.map((field) => field.name));
   const missing = defaultEnquiryFields().filter((field) => field.locked && !names.has(field.name));
-  return [...missing, ...fields];
+  return dedupeEnquiryFields([...missing, ...fields]);
+}
+
+export function dedupeEnquiryFields(fields: EnquiryField[]): EnquiryField[] {
+  const seen = new Set<string>();
+  const unique: EnquiryField[] = [];
+  for (const field of fields) {
+    if (!field.name || seen.has(field.name)) continue;
+    seen.add(field.name);
+    unique.push(field);
+  }
+  return unique;
 }
 
 export function packEnquiryAnswers(form: FormData, fields: EnquiryField[]) {
