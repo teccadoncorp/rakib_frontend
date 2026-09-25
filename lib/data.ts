@@ -1,3 +1,5 @@
+import type { EnquiryField } from "./enquiry-fields";
+
 export type ServiceDoc = {
   name: string;
   hint: string;
@@ -21,6 +23,7 @@ export type Service = {
   priceLabel: string;
   priceDisplay: string;
   documents: ServiceDoc[];
+  enquiryFields?: EnquiryField[];
   requiresPartner?: boolean;
   active?: boolean;
   sortOrder?: number;

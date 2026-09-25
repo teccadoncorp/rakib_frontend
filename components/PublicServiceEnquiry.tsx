@@ -1,13 +1,16 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
+import { EnquiryFieldInputs } from "@/components/EnquiryFieldInputs";
 import { api } from "@/lib/api";
 import { useSettings } from "@/lib/cms";
+import { normalizeEnquiryFields, packEnquiryAnswers } from "@/lib/enquiry-fields";
 import type { Service } from "@/lib/data";
 import { telHref, waHref } from "@/lib/site";
 
 export function PublicServiceEnquiry({ service }: { service: Service }) {
   const settings = useSettings();
+  const fields = useMemo(() => normalizeEnquiryFields(service.enquiryFields), [service.enquiryFields]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [saving, setSaving] = useState(false);
@@ -21,6 +24,7 @@ export function PublicServiceEnquiry({ service }: { service: Service }) {
     setSuccess("");
     const form = new FormData(formEl);
     form.set("service_slug", service.slug);
+    packEnquiryAnswers(form, fields);
     try {
       const res = await api.publicEnquiry(form);
       const ref = res.application?.ref || "";
@@ -61,38 +65,14 @@ export function PublicServiceEnquiry({ service }: { service: Service }) {
       {error ? <div className="alert alert-danger">{error}</div> : null}
       {success ? <div className="alert alert-success">{success}</div> : null}
       <form onSubmit={onSubmit} encType="multipart/form-data">
-        <div className="form-group">
-          <label className="form-label" htmlFor={`${service.slug}-name`}>
-            Full name <span style={{ color: "red" }}>*</span>
-          </label>
-          <input id={`${service.slug}-name`} name="customer_name" className="form-control" required placeholder="Your full name" />
-        </div>
-        <div className="form-group">
-          <label className="form-label" htmlFor={`${service.slug}-mobile`}>
-            Mobile number <span style={{ color: "red" }}>*</span>
-          </label>
-          <input id={`${service.slug}-mobile`} name="mobile" className="form-control" required inputMode="numeric" pattern="[0-9]{10}" placeholder="10-digit mobile" />
-        </div>
-        <div className="form-group">
-          <label className="form-label" htmlFor={`${service.slug}-email`}>Email (optional)</label>
-          <input id={`${service.slug}-email`} name="email" type="email" className="form-control" placeholder="name@example.com" />
-        </div>
-        <div className="form-group">
-          <label className="form-label" htmlFor={`${service.slug}-address`}>Address / village</label>
-          <textarea id={`${service.slug}-address`} name="address" className="form-control" rows={2} placeholder="Village, city, pin" />
-        </div>
-        <div className="form-group">
-          <label className="form-label" htmlFor={`${service.slug}-message`}>
-            Details for {service.title}
-          </label>
-          <textarea
-            id={`${service.slug}-message`}
-            name="message"
-            className="form-control"
-            rows={4}
-            placeholder={`Tell us what you need for ${service.title}. Example: new application, correction, documents you already have.`}
-          />
-        </div>
+        <EnquiryFieldInputs
+          fields={fields.map((field) =>
+            field.name === "message" && !field.placeholder
+              ? { ...field, label: field.label || `Details for ${service.title}`, placeholder: `Tell us what you need for ${service.title}.` }
+              : field
+          )}
+          idPrefix={service.slug}
+        />
         {(service.documents || []).map((doc) => (
           <div className="form-group" key={doc.name}>
             <label className="form-label">

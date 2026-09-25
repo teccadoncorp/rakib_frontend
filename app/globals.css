@@ -249,6 +249,21 @@ img {
   transform: translateY(-1px);
 }
 
+.btn-dash-apply {
+  background: rgba(7, 25, 56, 0.55);
+  color: #ffffff;
+  font-weight: 800;
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 16px rgba(7, 25, 56, 0.28);
+}
+
+.btn-dash-apply:hover {
+  background: #ffffff;
+  color: #071938;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(7, 25, 56, 0.32);
+}
+
 .btn-sm {
   padding: 7px 14px;
   font-size: 0.82rem;

@@ -1,4 +1,5 @@
 import { api, type CatalogService, type PortalSettings } from "./api";
+import { normalizeEnquiryFields, type EnquiryField } from "./enquiry-fields";
 import { SERVICES, serviceImage, type Service, type ServiceDoc } from "./data";
 import { withSite, type SiteInfo } from "./site";
 
@@ -25,6 +26,7 @@ export function toCatalogService(service: Service, index = 0): CatalogService {
     priceLabel: service.priceLabel || "",
     priceDisplay: service.priceDisplay || "",
     documents: Array.isArray(service.documents) ? service.documents : [],
+    enquiryFields: normalizeEnquiryFields(service.enquiryFields),
     requiresPartner: Boolean(service.requiresPartner),
     active: service.active !== false,
     sortOrder: Number(service.sortOrder || index + 1),
@@ -72,6 +74,9 @@ export function serviceFromApi(raw: CatalogService | Service, index = 0): Servic
       maxMb: Number(doc.maxMb || 5),
       required: doc.required !== false,
     })),
+    enquiryFields: normalizeEnquiryFields(
+      "enquiryFields" in raw ? (raw.enquiryFields as EnquiryField[] | undefined) : undefined
+    ),
     requiresPartner: Boolean(raw.requiresPartner),
     active: raw.active !== false,
     sortOrder: Number(raw.sortOrder || 0),

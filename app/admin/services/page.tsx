@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/auth";
 import { api, type CatalogService } from "@/lib/api";
 import { emptyDoc, FALLBACK_CATALOG } from "@/lib/catalog";
 import { formatInr, type ServiceDoc } from "@/lib/data";
+import { emptyEnquiryField, normalizeEnquiryFields, resolveFieldName, type EnquiryField, type EnquiryFieldType } from "@/lib/enquiry-fields";
 
 type Draft = {
   id?: string;
@@ -29,6 +30,7 @@ type Draft = {
   priceDisplayType: string;
   roleOption: string;
   documents: ServiceDoc[];
+  enquiryFields: EnquiryField[];
 };
 
 function draftFrom(service?: CatalogService | null): Draft {
@@ -57,6 +59,7 @@ function draftFrom(service?: CatalogService | null): Draft {
           uid: doc.uid || `doc-${service.id || "new"}-${index}`,
         }))
       : [],
+    enquiryFields: normalizeEnquiryFields(service?.enquiryFields),
   };
 }
 
@@ -130,6 +133,17 @@ export default function AdminServicesPage() {
       documents: draft.documents
         .filter((doc) => doc.name.trim())
         .map(({ uid, ...doc }) => doc),
+      enquiryFields: draft.enquiryFields
+        .filter((field) => field.label.trim())
+        .map((field) => {
+          const name = resolveFieldName(field);
+          return {
+            ...field,
+            name,
+            required: name === "customer_name" || name === "mobile" ? true : field.required,
+            locked: name === "customer_name" || name === "mobile",
+          };
+        }),
     };
   }
 
@@ -166,6 +180,28 @@ export default function AdminServicesPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not delete this service.");
     }
+  }
+
+  function updateField(index: number, patch: Partial<EnquiryField>) {
+    setEditing((current) => {
+      if (!current) return current;
+      return {
+        ...current,
+        enquiryFields: current.enquiryFields.map((field, i) => (i === index ? { ...field, ...patch } : field)),
+      };
+    });
+  }
+
+  function moveField(index: number, direction: -1 | 1) {
+    setEditing((current) => {
+      if (!current) return current;
+      const next = index + direction;
+      if (next < 0 || next >= current.enquiryFields.length) return current;
+      const enquiryFields = [...current.enquiryFields];
+      const [item] = enquiryFields.splice(index, 1);
+      enquiryFields.splice(next, 0, item);
+      return { ...current, enquiryFields };
+    });
   }
 
   function updateDoc(index: number, patch: Partial<ServiceDoc>) {
@@ -216,7 +252,7 @@ export default function AdminServicesPage() {
             <div key={s.id} className="ap-card" style={{ animationDelay: `${i * 40}ms`, display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
               <div>
                 <strong>{s.title}</strong>
-                <div className="ap-muted">/{s.slug} · {(s.documents || []).length} document{(s.documents || []).length === 1 ? "" : "s"}</div>
+                <div className="ap-muted">/{s.slug} · {normalizeEnquiryFields(s.enquiryFields).length} form fields · {(s.documents || []).length} document{(s.documents || []).length === 1 ? "" : "s"}</div>
                 <p className="ap-sub" style={{ margin: "6px 0 0", fontSize: "0.88rem" }}>{s.description}</p>
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
                   {s.active === false ? <span className="ap-chip">Hidden</span> : <span className="ap-chip">Live</span>}
@@ -325,6 +361,37 @@ export default function AdminServicesPage() {
 
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <div className="ap-label">Enquiry form fields</div>
+                <button type="button" className="ap-btn ghost" onClick={() => setEditing({ ...editing, enquiryFields: [...editing.enquiryFields, emptyEnquiryField()] })}>
+                  Add field
+                </button>
+              </div>
+              <p className="ap-muted" style={{ margin: "6px 0 0" }}>
+                These inputs appear on the public enquiry form and the logged-in apply form. Name and mobile stay required so each enquiry can be tracked.
+              </p>
+              <div style={{ display: "grid", gap: 12, marginTop: 10 }}>
+                {editing.enquiryFields.map((field, index) => (
+                  <FieldDraft
+                    key={field.id}
+                    field={field}
+                    onChange={(patch) => updateField(index, patch)}
+                    onRemove={() =>
+                      setEditing((current) =>
+                        current
+                          ? { ...current, enquiryFields: current.enquiryFields.filter((_, i) => i !== index) }
+                          : current
+                      )
+                    }
+                    onMove={(direction) => moveField(index, direction)}
+                    canMoveUp={index > 0}
+                    canMoveDown={index < editing.enquiryFields.length - 1}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
                 <div className="ap-label">Required documents</div>
                 <button type="button" className="ap-btn ghost" onClick={() => setEditing({ ...editing, documents: [...editing.documents, emptyDoc()] })}>
                   Add document
@@ -360,6 +427,112 @@ export default function AdminServicesPage() {
         </AdminModal>
       ) : null}
     </AdminShell>
+  );
+}
+
+function FieldDraft({
+  field,
+  onChange,
+  onRemove,
+  onMove,
+  canMoveUp,
+  canMoveDown,
+}: {
+  field: EnquiryField;
+  onChange: (patch: Partial<EnquiryField>) => void;
+  onRemove: () => void;
+  onMove: (direction: -1 | 1) => void;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+}) {
+  function stopSubmit(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") e.preventDefault();
+  }
+
+  return (
+    <div className="ap-doc-card">
+      <div className="ap-form-grid">
+        <label>
+          Label
+          <input
+            className="ap-input"
+            autoComplete="off"
+            value={field.label}
+            onChange={(e) => {
+              const label = e.target.value;
+              const patch: Partial<EnquiryField> = { label };
+              if (!field.locked) patch.name = resolveFieldName({ label, name: "", locked: false });
+              onChange(patch);
+            }}
+            onKeyDown={stopSubmit}
+          />
+        </label>
+        <label>
+          Input type
+          <select
+            className="ap-select"
+            value={field.type}
+            onChange={(e) => onChange({ type: e.target.value as EnquiryFieldType })}
+            disabled={field.locked}
+          >
+            <option value="text">Short text</option>
+            <option value="textarea">Long text</option>
+            <option value="email">Email</option>
+            <option value="tel">Phone</option>
+            <option value="number">Number</option>
+            <option value="date">Date</option>
+            <option value="select">Dropdown</option>
+          </select>
+        </label>
+        <label>
+          Placeholder
+          <input
+            className="ap-input"
+            autoComplete="off"
+            value={field.placeholder}
+            onChange={(e) => onChange({ placeholder: e.target.value })}
+            onKeyDown={stopSubmit}
+          />
+        </label>
+        {field.type === "select" ? (
+          <label>
+            Dropdown options
+            <input
+              className="ap-input"
+              autoComplete="off"
+              value={field.options}
+              placeholder="New, Correction, Renewal"
+              onChange={(e) => onChange({ options: e.target.value })}
+              onKeyDown={stopSubmit}
+            />
+          </label>
+        ) : null}
+      </div>
+      <div className="ap-actions">
+        <label className="ap-check">
+          <input
+            type="checkbox"
+            checked={field.required}
+            disabled={field.locked}
+            onChange={(e) => onChange({ required: e.target.checked })}
+          />
+          Required
+        </label>
+        <button type="button" className="ap-btn ghost" disabled={!canMoveUp} onClick={() => onMove(-1)}>
+          Up
+        </button>
+        <button type="button" className="ap-btn ghost" disabled={!canMoveDown} onClick={() => onMove(1)}>
+          Down
+        </button>
+        {field.locked ? (
+          <span className="ap-muted">Kept so the enquiry can be tracked</span>
+        ) : (
+          <button type="button" className="ap-btn danger" onClick={onRemove}>
+            Remove
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
 

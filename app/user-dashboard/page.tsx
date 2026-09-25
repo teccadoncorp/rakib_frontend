@@ -76,7 +76,7 @@ export default function DashboardPage() {
             <Link href="/pvc-print" className="btn btn-primary" style={{ background: "#ffffff", color: "var(--primary-blue)", fontWeight: 800 }}>
               <i className="fa-solid fa-id-card"></i> Order PVC Card
             </Link>
-            <Link href="/apply" className="btn btn-outline" style={{ borderColor: "rgba(255,255,255,0.4)", color: "#ffffff" }}>
+            <Link href="/apply" className="btn btn-dash-apply">
               <i className="fa-solid fa-paper-plane"></i> Apply Service
             </Link>
             <button type="button" onClick={() => { logout(); router.push("/"); }} className="btn" style={{ background: "#ef4444", color: "#ffffff", fontWeight: 700 }}>

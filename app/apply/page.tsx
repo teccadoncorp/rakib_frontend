@@ -7,6 +7,8 @@ import { formatInr, getService } from "@/lib/data";
 import { upiQrUrl } from "@/lib/site";
 import { useCatalog, useSettings } from "@/lib/cms";
 import { api, type Partner } from "@/lib/api";
+import { normalizeEnquiryFields, packEnquiryAnswers } from "@/lib/enquiry-fields";
+import { EnquiryFieldInputs } from "@/components/EnquiryFieldInputs";
 import { isPartnerRole, isStaffRole, roleLabel, serviceRequiresPartner } from "@/lib/roles";
 
 export default function ApplyPage() {
@@ -36,6 +38,7 @@ function ApplyInner() {
   const [interestOk, setInterestOk] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const enquiryFields = useMemo(() => normalizeEnquiryFields(service.enquiryFields), [service.enquiryFields]);
   const needsPartner =
     settings.roleSelection !== "off" &&
     (settings.roleSelection === "mandatory" || serviceRequiresPartner(service.slug, service.requiresPartner));
@@ -54,12 +57,13 @@ function ApplyInner() {
   if (!ready || !user) return null;
 
   function goStep2() {
-    const name = (document.getElementById("applyCustName") as HTMLInputElement)?.value.trim();
-    const mobile = (document.getElementById("applyCustMobile") as HTMLInputElement)?.value.trim();
-    const address = (document.getElementById("applyCustAddress") as HTMLInputElement)?.value.trim();
-    if (!name) return alert("Please enter your Full Name.");
-    if (!mobile || !/^[0-9]{10}$/.test(mobile)) return alert("Please enter a valid 10-digit Mobile Number.");
-    if (!address) return alert("Please enter your Business / Shop Address.");
+    for (const field of enquiryFields) {
+      if (!field.required) continue;
+      const el = document.getElementById(`apply-${field.name}`) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
+      const value = el?.value.trim() || "";
+      if (!value) return alert(`Please enter ${field.label}.`);
+      if (field.name === "mobile" && !/^[0-9]{10}$/.test(value)) return alert("Please enter a valid 10-digit Mobile Number.");
+    }
     const docs = Array.from(document.querySelectorAll<HTMLInputElement>('.doc-file-input[data-mandatory="1"]'));
     for (const input of docs) {
       if (input.files?.length === 0) {
@@ -81,6 +85,7 @@ function ApplyInner() {
     const form = new FormData(e.currentTarget);
     form.set("service_slug", service.slug);
     form.set("partner_code", partner?.partnerCode || partnerCode);
+    packEnquiryAnswers(form, enquiryFields);
     try {
       const res = await api.submitApplication(token, form);
       setSuccess(`${settings.enquirySuccess} Reference ID: ${res.application.ref}`);
@@ -227,30 +232,16 @@ function ApplyInner() {
                 <h3 style={{ fontSize: "1.15rem", marginBottom: 16, color: "var(--navy-deep)" }}>
                   <i className="fa-solid fa-user" style={{ color: "var(--primary-blue)" }}></i> Applicant / Customer Information
                 </h3>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
-                  <div className="form-group">
-                    <label className="form-label">Full Name <span style={{ color: "red" }}>*</span></label>
-                    <input type="text" name="customer_name" id="applyCustName" className="form-control" required placeholder="e.g. Rahul Das" defaultValue={user.name} />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Mobile Number <span style={{ color: "red" }}>*</span></label>
-                    <input type="tel" name="mobile" id="applyCustMobile" className="form-control" required placeholder="10-digit mobile number" defaultValue={user.mobile} />
-                  </div>
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
-                  <div className="form-group">
-                    <label className="form-label">Email Address (Optional)</label>
-                    <input type="email" name="email" className="form-control" placeholder="name@example.com" defaultValue={user.email || ""} />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Business / Shop Address <span style={{ color: "red" }}>*</span></label>
-                    <input type="text" name="address" id="applyCustAddress" className="form-control" required placeholder="Full Village/City/P.O. Address" defaultValue={user.address || ""} />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Message / Additional Instructions (Optional)</label>
-                  <textarea name="message" className="form-control" rows={2} placeholder="Provide any special remarks, password for Aadhaar PDF, or details..."></textarea>
-                </div>
+                <EnquiryFieldInputs
+                  fields={enquiryFields}
+                  idPrefix="apply"
+                  defaults={{
+                    customer_name: user.name,
+                    mobile: user.mobile,
+                    email: user.email || "",
+                    address: user.address || "",
+                  }}
+                />
 
                 <hr style={{ border: 0, borderTop: "1px solid var(--border-light)", margin: "30px 0" }} />
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>

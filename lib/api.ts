@@ -1,3 +1,4 @@
+import type { EnquiryField } from "./enquiry-fields";
 import type { ServiceDoc } from "./data";
 import { getApiUrl } from "./site";
 import type { Role } from "./roles";
@@ -130,6 +131,7 @@ export type CatalogService = {
   priceLabel: string;
   priceDisplay: string;
   documents: ServiceDoc[];
+  enquiryFields?: EnquiryField[];
   requiresPartner: boolean;
   active: boolean;
   sortOrder: number;
